@@ -1,14 +1,23 @@
 package com.devtiro.pets.mappers;
 
+import com.devtiro.pets.domain.dto.PetCreateRequest;
 import com.devtiro.pets.domain.dto.PetResponse;
 import com.devtiro.pets.domain.entity.Pet;
+import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.repositories.PetRepository;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {PhotoMapper.class, MedicalRecordMapper.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {PhotoMapper.class, MedicalRecordMapper.class, GeoLocationMapper.class})
 public interface PetMapper {
 
     PetResponse toPetResponse(Pet pet);
+
+    @Mapping(target = "staffId", source = "staff.id")
+    @Mapping(target = "staffName", expression = "java(staff.getFirstName() + \" \" + staff.getLastName())")
+    @Mapping(target = "staffEmail", source = "staff.email")
+    Pet toPet(PetCreateRequest request, User staff);
 
 }

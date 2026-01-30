@@ -3,6 +3,7 @@ package com.devtiro.pets.domain.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -19,7 +20,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet extends Auditing {
+public class Pet extends Auditing implements Persistable<String> {
 
     @Id
     private String id;
@@ -60,4 +61,8 @@ public class Pet extends Auditing {
     @Field(type = FieldType.Nested)
     private List<Photo> photos = new ArrayList<>();
 
+    @Override
+    public boolean isNew() {
+        return id == null || (super.createdAt == null && super.createdBy == null);
+    }
 }

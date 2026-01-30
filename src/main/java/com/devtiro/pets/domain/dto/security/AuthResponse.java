@@ -1,7 +1,6 @@
 package com.devtiro.pets.domain.dto.security;
 
 import com.devtiro.pets.domain.entity.Role;
-import com.devtiro.realestate.domain.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

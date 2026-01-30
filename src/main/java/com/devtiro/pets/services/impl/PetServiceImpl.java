@@ -2,6 +2,9 @@ package com.devtiro.pets.services.impl;
 
 import com.devtiro.pets.domain.dto.PetCreateRequest;
 import com.devtiro.pets.domain.dto.PetResponse;
+import com.devtiro.pets.domain.entity.Pet;
+import com.devtiro.pets.domain.entity.PetStatus;
+import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.mappers.PetMapper;
 import com.devtiro.pets.repositories.PetRepository;
 import com.devtiro.pets.services.PetService;
@@ -18,8 +21,13 @@ public class PetServiceImpl implements PetService {
     private final PetMapper petMapper;
 
     @Override
-    public PetResponse createPet(PetCreateRequest request) {
+    public PetResponse createPet(PetCreateRequest request, User staff) {
 
+        Pet pet = petMapper.toPet(request, staff);
+        pet.setStatus(PetStatus.AVAILABLE);
+
+        Pet savedPet = petRepository.save(pet);
+        return petMapper.toPetResponse(savedPet);
     }
 
 

@@ -30,12 +30,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${security.password.bcrypt-strength}")
-    private int passwordBcryptStrength;
-
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -55,7 +51,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(passwordBcryptStrength);
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

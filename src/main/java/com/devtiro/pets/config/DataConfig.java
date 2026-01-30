@@ -1,18 +1,24 @@
 package com.devtiro.pets.config;
 
+import com.devtiro.pets.domain.dto.security.AuthResponse;
+import com.devtiro.pets.domain.dto.security.RegisterRequest;
 import com.devtiro.pets.domain.entity.*;
 import com.devtiro.pets.repositories.MedicalRecordRepository;
 import com.devtiro.pets.repositories.PetRepository;
 import com.devtiro.pets.repositories.UserRepository;
+import com.devtiro.pets.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +31,7 @@ public class DataConfig {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MedicalRecordRepository medicalRecordRepository;
+    private final AuthService authService;
     // private final AdoptionApplicationRepository adoptionApplicationRepository;
 
     @Bean
@@ -236,13 +243,40 @@ public class DataConfig {
         User staff = User.builder()
                 .id("staff-001")
                 .username("staff_member")
+                .firstName("Staff")
+                .lastName("Member")
+                .phoneNumber("23030130")
                 .email("staff@shelter.com")
                 .password(passwordEncoder.encode("staffpass123"))
                 .role(Role.STAFF)
                 .enabled(true)
                 .accountNonLocked(true)
                 .build();
-        return userRepository.save(staff);
+        staff.setCreatedBy("system");
+        staff.setLastModifiedBy("system");
+
+        RegisterRequest registerRequest = new RegisterRequest(
+                staff.getUsername(),
+                staff.getEmail(),
+                "staffpass123",
+                staff.getFirstName(),
+                staff.getLastName(),
+                staff.getPhoneNumber(),
+                staff.getRole()
+        );
+        AuthResponse registrationResponse = authService.register(
+                registerRequest,
+                "0:0:0:0:0:0:0:1"
+        );
+
+        staff.setRefreshToken(registrationResponse.getRefreshToken());
+        LocalDateTime refreshExpiryInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(registrationResponse.getRefreshExpiresIn()), ZoneId.systemDefault());
+        staff.setRefreshTokenExpiryDate(refreshExpiryInLocalDateTime);
+
+        User savedStaff = updateUser(staff);
+
+        log.info("agent id: {}, email: {}, accesstoken: {}, refreshtoken: {}", savedStaff.getId(), savedStaff.getEmail(), registrationResponse.getAccessToken(), registrationResponse.getRefreshToken());
+        return savedStaff;
     }
 
     /**
@@ -252,13 +286,50 @@ public class DataConfig {
         User user = User.builder()
                 .id("user-001")
                 .username("john_user")
-                .email("john@example.com")
+                .firstName("Regular")
+                .lastName("User")
+                .phoneNumber("101201200")
+                .email("user@example.com")
                 .password(passwordEncoder.encode("password123"))
                 .role(Role.USER)
                 .enabled(true)
                 .accountNonLocked(true)
                 .build();
+
+        user.setCreatedBy("system");
+        user.setLastModifiedBy("system");
+
+        RegisterRequest registerRequest = new RegisterRequest(
+                user.getUsername(),
+                user.getEmail(),
+                "password123",
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPhoneNumber(),
+                user.getRole()
+        );
+        AuthResponse registrationResponse = authService.register(
+                registerRequest,
+                "0:0:0:0:0:0:0:1"
+        );
+
+        user.setRefreshToken(registrationResponse.getRefreshToken());
+        LocalDateTime refreshExpiryInLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(registrationResponse.getRefreshExpiresIn()), ZoneId.systemDefault());
+        user.setRefreshTokenExpiryDate(refreshExpiryInLocalDateTime);
+
+        User savedUser = updateUser(user);
+
+        log.info("agent id: {}, email: {}, accesstoken: {}, refreshtoken: {}", savedUser.getId(), savedUser.getEmail(), registrationResponse.getAccessToken(), registrationResponse.getRefreshToken());
+        return savedUser;
+    }
+
+    public User updateUser(User user) {
         return userRepository.save(user);
+    }
+
+    @CacheEvict(value = "usersByEmail", key = "#user.email")
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     /**
