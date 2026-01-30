@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: pets-adoption-platform
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URL:http://localhost:9200}
+    username: ${ELASTICSEARCH_USERNAME:}
+    password: ${ELASTICSEARCH_PASSWORD:}
+
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}  # Must be set via environment variable
+  access-token-expiration: ${JWT_ACCESS_EXPIRATION:3600000}  # 1 hour
+  refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7 days
