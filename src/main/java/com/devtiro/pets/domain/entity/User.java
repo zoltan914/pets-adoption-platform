@@ -28,8 +28,9 @@ public class User extends Auditing implements UserDetails {
     @Field(type = FieldType.Keyword)
     private String email;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String username;
+
     @Field(type = FieldType.Text)
     private String firstName;
     @Field(type = FieldType.Text)
