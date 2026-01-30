@@ -11,11 +11,22 @@ import java.util.Optional;
 
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
+    // https://stackoverflow.com/questions/45701185/java-lang-string-cannot-be-cast-to-com-model-user-error-while-trying-to-display
     @Override
     public Optional<String> getCurrentAuditor() {
         return Optional.of(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
-                .map(Authentication::getName);
+                .map(Authentication::getPrincipal)
+                // or Authentication::getName, and the stuff below is not necessary
+                .map(principal -> {
+                    if (principal instanceof User user) { // Pattern matching (Java 16+)
+                        return user.getUsername();
+                    }
+                    if (principal instanceof String anonymousUser) { // anonymousUser user (user not logged in)
+                        return anonymousUser;
+                    }
+                    return null;
+                });
     }
 }
