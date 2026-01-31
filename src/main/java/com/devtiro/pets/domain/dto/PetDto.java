@@ -1,6 +1,7 @@
 package com.devtiro.pets.domain.dto;
 
 import com.devtiro.pets.domain.entity.PetSize;
+import com.devtiro.pets.domain.entity.PetStatus;
 import com.devtiro.pets.domain.entity.Species;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class PetDto {
     private Species species;
     private Integer age;
     private PetSize petSize;
+    private PetStatus status;
     private AddressDto address;
     private GeoPointDto location;
 

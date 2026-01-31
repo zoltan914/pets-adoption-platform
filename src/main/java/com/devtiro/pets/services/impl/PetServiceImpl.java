@@ -2,6 +2,7 @@ package com.devtiro.pets.services.impl;
 
 import com.devtiro.pets.domain.dto.PetCreateRequest;
 import com.devtiro.pets.domain.dto.PetDto;
+import com.devtiro.pets.domain.dto.PetStatusUpdateRequest;
 import com.devtiro.pets.domain.dto.PetUpdateRequest;
 import com.devtiro.pets.domain.entity.Pet;
 import com.devtiro.pets.domain.entity.PetStatus;
@@ -40,6 +41,22 @@ public class PetServiceImpl implements PetService {
         petMapper.updatePet(existingPet, request);
         Pet updatedPet = petRepository.save(existingPet);
 
+        return petMapper.toPetDto(updatedPet);
+    }
+
+    @Override
+    public PetDto updatePetStatus(String petId, PetStatusUpdateRequest request) {
+        Pet existingPet = petRepository.findById(petId)
+                .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
+
+        if (existingPet.getStatus().equals(request.getStatus())) {
+            throw new IllegalArgumentException("Pet is already in this status: " +  request.getStatus());
+        }
+
+        existingPet.setStatus(request.getStatus());
+
+        Pet updatedPet = petRepository.save(existingPet);
+        log.info("Pet status updated to: {}",  updatedPet.getStatus());
         return petMapper.toPetDto(updatedPet);
     }
 

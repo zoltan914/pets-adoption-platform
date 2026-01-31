@@ -25,9 +25,9 @@ public class MedicalRecord extends Auditing {
 
     @Field(type = FieldType.Keyword)
     private String staffId;
-    
-    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
-    private LocalDateTime date;
+
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute)
+    private LocalDateTime appointmentDate;
     
     @Field(type = FieldType.Text)
     private String type;

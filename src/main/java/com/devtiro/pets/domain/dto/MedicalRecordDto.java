@@ -1,5 +1,6 @@
 package com.devtiro.pets.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,14 +15,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MedicalRecordDto {
     private String id;
-    private LocalDate date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime appointmentDate;
     private String type;
     private String description;
     private String veterinarian;
     private String notes;
 
     private String createdBy;
-    private LocalDateTime createdAt;
     private String updatedBy;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 }

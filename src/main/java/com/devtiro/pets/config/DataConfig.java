@@ -481,7 +481,7 @@ public class DataConfig {
                 .staffId(staffId)
                 .type(type)
                 .description(description)
-                .date(date)
+                .appointmentDate(date)
                 .veterinarian(veterinarian)
                 .notes(notes)
                 .build();
