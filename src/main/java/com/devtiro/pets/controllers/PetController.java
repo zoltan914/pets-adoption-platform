@@ -2,18 +2,14 @@ package com.devtiro.pets.controllers;
 
 import com.devtiro.pets.domain.dto.PetCreateRequest;
 import com.devtiro.pets.domain.dto.PetDto;
-import com.devtiro.pets.domain.dto.PhotoDto;
-import com.devtiro.pets.domain.dto.PhotoUploadRequest;
+import com.devtiro.pets.domain.dto.PetUpdateRequest;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.services.PetService;
-import com.devtiro.pets.services.PhotoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -29,6 +25,14 @@ public class PetController {
             @AuthenticationPrincipal User staff
     ) {
         return petService.createPet(request, staff);
+    }
+
+    @PutMapping("/{petId}")
+    public PetDto updatePet(
+            @PathVariable String petId,
+            @Valid @RequestBody PetUpdateRequest request
+    ) {
+        return petService.updatePet(petId, request);
     }
 
 }
