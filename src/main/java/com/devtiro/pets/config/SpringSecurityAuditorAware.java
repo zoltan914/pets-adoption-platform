@@ -11,21 +11,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
-    /**
-     * Initial Login Step: When you submit a login request,
-     * Spring Security creates a UsernamePasswordAuthenticationToken where the principal is the username string you typed in.
-     * Audit Trigger during Login: If your AuthService.login method saves an entity (like a login log or updating a "last login" timestamp) before the authentication is fully finalized, the AuditorAware bean triggers while the principal is still just a String.
-     * Anonymous Access: If an entity is modified by a user who isn't logged in, the principal is the string "anonymousUser".
-     * @return
-     */
-    // https://stackoverflow.com/questions/45701185/java-lang-string-cannot-be-cast-to-com-model-user-error-while-trying-to-display
+
     @Override
     public Optional<String> getCurrentAuditor() {
-        return Optional.of(SecurityContextHolder.getContext())
+        return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
+                //.map(Authentication::getName);
                 .map(Authentication::getPrincipal)
-                // or Authentication::getName, and the stuff below is not necessary
                 .map(principal -> {
                     // Case 1: Principal is your custom User entity
                     if (principal instanceof User user) {
@@ -42,4 +35,5 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
                     return null;
                 });
     }
+
 }

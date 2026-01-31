@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet extends Auditing implements Persistable<String> {
+public class Pet extends Auditing {
 
     @Id
     private String id;
@@ -61,8 +61,4 @@ public class Pet extends Auditing implements Persistable<String> {
     @Field(type = FieldType.Nested)
     private List<Photo> photos = new ArrayList<>();
 
-    @Override
-    public boolean isNew() {
-        return id == null || (super.createdAt == null && super.createdBy == null);
-    }
 }

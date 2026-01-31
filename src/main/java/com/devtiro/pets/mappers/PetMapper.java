@@ -15,6 +15,7 @@ public interface PetMapper {
 
     PetResponse toPetResponse(Pet pet);
 
+    // TODO these mappings should be in the service
     @Mapping(target = "staffId", source = "staff.id")
     @Mapping(target = "staffName", expression = "java(staff.getFirstName() + \" \" + staff.getLastName())")
     @Mapping(target = "staffEmail", source = "staff.email")
