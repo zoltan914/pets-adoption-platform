@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/medical-records")
@@ -18,6 +20,13 @@ public class MedicalRecordController {
 
     private final MedicalRecordService medicalRecordService;
 
+    @GetMapping("/{petId}")
+    public List<MedicalRecordDto> getAllMedicalRecordsByPetId(
+            @PathVariable String petId
+    ) {
+        return medicalRecordService.getAllMedicalRecordsByPetId(petId);
+    }
+
     @PostMapping("/{petId}")
     public MedicalRecordDto addMedicalRecord(
             @PathVariable String petId,
@@ -25,6 +34,14 @@ public class MedicalRecordController {
             @AuthenticationPrincipal User staff
     ) {
         return  medicalRecordService.addMedicalRecord(petId, request, staff);
+    }
+
+    @PutMapping("/{medicalRecordId}")
+    public MedicalRecordDto updateMedicalRecord(
+            @PathVariable String medicalRecordId,
+            @Valid @RequestBody MedicalRecordUpdateRequest request
+    ) {
+        return  medicalRecordService.updateMedicalRecord(medicalRecordId, request);
     }
 
 }

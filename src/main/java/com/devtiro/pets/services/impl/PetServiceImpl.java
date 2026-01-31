@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +24,14 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
     private final PetMapper petMapper;
+
+    @Override
+    public List<PetDto> getAllPets() {
+        List<Pet> pets = petRepository.findAll();
+        return pets.stream()
+                .map(petMapper::toPetDto)
+                .toList();
+    }
 
     @Override
     public PetDto createPet(PetCreateRequest request, User staff) {
@@ -58,6 +68,15 @@ public class PetServiceImpl implements PetService {
         Pet updatedPet = petRepository.save(existingPet);
         log.info("Pet status updated to: {}",  updatedPet.getStatus());
         return petMapper.toPetDto(updatedPet);
+    }
+
+    @Override
+    public void deletePet(String petId) {
+        Pet existingPet = petRepository.findById(petId)
+                .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
+
+        log.info("Pet to deleted with id: {}",  existingPet.getId());
+        petRepository.delete(existingPet);
     }
 
 }

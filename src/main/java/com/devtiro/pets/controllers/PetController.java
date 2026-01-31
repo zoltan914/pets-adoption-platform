@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/pets")
@@ -19,6 +21,11 @@ import org.springframework.web.bind.annotation.*;
 public class PetController {
 
     private final PetService petService;
+
+    @GetMapping
+    public List<PetDto> getAllPets() {
+        return petService.getAllPets();
+    }
 
     @PostMapping
     public PetDto createPet(
@@ -44,4 +51,10 @@ public class PetController {
         return petService.updatePetStatus(petId, request);
     }
 
+    @DeleteMapping("/{petId}")
+    public void deletePet(
+            @PathVariable String petId
+    ) {
+        petService.deletePet(petId);
+    }
 }
