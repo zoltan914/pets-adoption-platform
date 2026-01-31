@@ -220,7 +220,7 @@ public class DataConfig {
                     "Gray dwarf rabbit, small and gentle. Perfect for apartment living."));
 
             // Add medical records to pets
-            addMedicalRecords(pets);
+            addMedicalRecords(pets, staffUser.getId());
 
             petRepository.saveAll(pets);
             log.info("Created {} pets successfully", pets.size());
@@ -349,20 +349,24 @@ public class DataConfig {
         List<Photo> photos = new ArrayList<>();
         photos.add(createPhoto(getPhotoUrl(species)));
 
-        return Pet.builder()
+        Pet pet = Pet.builder()
                 .name(name)
                 .description(description)
                 .species(species)
                 .staffId(createdBy.getId())
                 .staffName(createdBy.getFirstName() + " " + createdBy.getLastName())
                 .staffEmail(createdBy.getEmail())
-                .age((int)(ageInYears))
+                .age((int) (ageInYears))
                 .petSize(size)
                 .address(address)
                 .location(new GeoPoint(lat, lon))
                 .status(PetStatus.AVAILABLE)
                 .photos(photos)
                 .build();
+
+        pet.setCreatedBy("system");
+        pet.setLastModifiedBy("system");
+        return pet;
     }
 
     /**
@@ -413,7 +417,7 @@ public class DataConfig {
     /**
      * Add medical records to pets
      */
-    private void addMedicalRecords(List<Pet> pets) {
+    private void addMedicalRecords(List<Pet> pets, String staffId) {
         for (int i = 0; i < pets.size(); i++) {
             Pet pet = pets.get(i);
             String petId = pet.getId();
@@ -422,6 +426,7 @@ public class DataConfig {
             if (i % 2 == 0) {
                 createMedicalRecord(
                         petId,
+                        staffId,
                         "Vaccination",
                         pet.getSpecies() == Species.DOG ? "DHPP vaccine" :
                                 (pet.getSpecies() == Species.CAT ? "FVRCP vaccine" : "General vaccination"),
@@ -435,6 +440,7 @@ public class DataConfig {
             if (pet.getAge() > 12 && i % 3 == 0) {
                 createMedicalRecord(
                         petId,
+                        staffId,
                         "Spay/Neuter",
                         "Spayed/Neutered",
                         LocalDateTime.now().minusMonths(6),
@@ -447,6 +453,7 @@ public class DataConfig {
             if (i % 4 == 0) {
                 createMedicalRecord(
                         petId,
+                        staffId,
                         "Health Check",
                         "Annual wellness exam",
                         LocalDateTime.now().minusMonths(1),
@@ -461,9 +468,11 @@ public class DataConfig {
     /**
      * Helper method to create a medical record
      */
-    private MedicalRecord createMedicalRecord(String petId, String type, String description, LocalDateTime date,
+    private MedicalRecord createMedicalRecord(String petId, String staffId, String type, String description, LocalDateTime date,
                                               String veterinarian, String notes) {
         MedicalRecord record = MedicalRecord.builder()
+                .petId(petId)
+                .staffId(staffId)
                 .type(type)
                 .description(description)
                 .date(date)
