@@ -1,6 +1,6 @@
 package com.devtiro.pets.config;
 
-import com.devtiro.pets.domain.dto.ErrorResponse;
+import com.devtiro.pets.domain.dto.security.ErrorResponse;
 import com.devtiro.pets.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +27,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        log.warn("User not found: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse("USER_NOT_FOUND", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         log.warn("User no found: {}", ex.getMessage());
@@ -39,6 +46,20 @@ public class GlobalExceptionHandler {
         log.warn("Unauthorized Access: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse("UNAUTHORIZED_ACCESS", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(UserAccountDisabledException.class)
+    public ResponseEntity<ErrorResponse> handleUserAccountDisabledException(UserAccountDisabledException ex) {
+        log.warn("User account disabled: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse("USER_ACCOUNT_DISABLED", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(error);
+    }
+
+    @ExceptionHandler(UserAccountLockedException.class)
+    public ResponseEntity<ErrorResponse> handleUserAccountLockedException(UserAccountLockedException ex) {
+        log.warn("User account locked: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse("USER_ACCOUNT_LOCKED", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(error);
     }
 
 
@@ -75,6 +96,13 @@ public class GlobalExceptionHandler {
         log.warn("Access denied: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse("ACCESS_DENIED", "You don't have permission to access this resource");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler(PetNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePetNotFoundException(PetNotFoundException ex) {
+        log.warn("Pet not found: {}", ex.getMessage());
+        ErrorResponse error = new ErrorResponse("PET_NOT_FOUND", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

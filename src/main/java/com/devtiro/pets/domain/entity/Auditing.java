@@ -29,7 +29,7 @@ public abstract class Auditing implements Persistable<String> {
     protected LocalDateTime createdAt;
 
     @LastModifiedBy
-    protected String lastModifiedBy;
+    protected String updatedBy;
 
     @LastModifiedDate
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)

@@ -2,6 +2,7 @@ package com.devtiro.pets.domain.dto;
 
 import com.devtiro.pets.domain.entity.PetSize;
 import com.devtiro.pets.domain.entity.Species;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetResponse {
+public class PetDto {
 
     private String id;
     private String name;
@@ -25,12 +26,12 @@ public class PetResponse {
     private PetSize petSize;
     private AddressDto address;
     private GeoPointDto location;
-    private List<PhotoDto> photos = new ArrayList<>();
-    private List<MedicalRecordDto> medicalRecords = new ArrayList<>();
 
     private String createdBy;
+    private String updatedBy;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-    private String lastModifiedBy;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
 }

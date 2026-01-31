@@ -5,15 +5,18 @@ import com.devtiro.pets.domain.dto.security.RegisterRequest;
 import com.devtiro.pets.domain.entity.*;
 import com.devtiro.pets.repositories.MedicalRecordRepository;
 import com.devtiro.pets.repositories.PetRepository;
+import com.devtiro.pets.repositories.PhotoRepository;
 import com.devtiro.pets.repositories.UserRepository;
 import com.devtiro.pets.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.IterableMapping;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+import org.springframework.data.util.Streamable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
@@ -29,6 +32,7 @@ public class DataConfig {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
+    private final PhotoRepository  photoRepository;
     private final PasswordEncoder passwordEncoder;
     private final MedicalRecordRepository medicalRecordRepository;
     private final AuthService authService;
@@ -42,6 +46,7 @@ public class DataConfig {
             // Clear existing data
             petRepository.deleteAll();
             userRepository.deleteAll();
+            photoRepository.deleteAll();
             medicalRecordRepository.deleteAll();
             // adoptionApplicationRepository.deleteAll();
 
@@ -222,11 +227,17 @@ public class DataConfig {
             // Add medical records to pets
             addMedicalRecords(pets, staffUser.getId());
 
-            petRepository.saveAll(pets);
-            log.info("Created {} pets successfully", pets.size());
+            List<Pet> savedPets = Streamable.of(petRepository.saveAll(pets)).toList();
+            List<Photo> photos = savedPets.stream()
+                    .map(pet -> createPhoto(getPhotoUrl(pet.getSpecies()), pet.getId()))
+                    .toList();
+
+            photoRepository.saveAll(photos);
+
+            log.info("Created {} pets successfully", savedPets.size());
 
             log.info("=== Sample data loaded successfully! ===");
-            log.info("Total pets: {}", pets.size());
+            log.info("Total pets: {}", savedPets.size());
             log.info("  - Dogs: 25 (Small: 6, Medium: 12, Large: 7, includes 5 senior dogs)");
             log.info("  - Cats: 20 (Small: 9, Medium: 11)");
             log.info("  - Rabbits: 5 (Small: 5)");
@@ -253,7 +264,7 @@ public class DataConfig {
                 .accountNonLocked(true)
                 .build();
         staff.setCreatedBy("system");
-        staff.setLastModifiedBy("system");
+        staff.setUpdatedBy("system");
 
         RegisterRequest registerRequest = new RegisterRequest(
                 staff.getUsername(),
@@ -297,7 +308,7 @@ public class DataConfig {
                 .build();
 
         user.setCreatedBy("system");
-        user.setLastModifiedBy("system");
+        user.setUpdatedBy("system");
 
         RegisterRequest registerRequest = new RegisterRequest(
                 user.getUsername(),
@@ -345,10 +356,6 @@ public class DataConfig {
         // Generate address based on location
         Address address = generateAddress(lat, lon);
 
-        // Create a photo
-        List<Photo> photos = new ArrayList<>();
-        photos.add(createPhoto(getPhotoUrl(species)));
-
         Pet pet = Pet.builder()
                 .name(name)
                 .description(description)
@@ -361,11 +368,10 @@ public class DataConfig {
                 .address(address)
                 .location(new GeoPoint(lat, lon))
                 .status(PetStatus.AVAILABLE)
-                .photos(photos)
                 .build();
 
         pet.setCreatedBy("system");
-        pet.setLastModifiedBy("system");
+        pet.setUpdatedBy("system");
         return pet;
     }
 
@@ -407,10 +413,10 @@ public class DataConfig {
     /**
      * Helper method to create a photo
      */
-    private Photo createPhoto(String url) {
+    private Photo createPhoto(String url, String petId) {
         return Photo.builder()
                 .url(url)
-                .uploadDate(LocalDateTime.now())
+                .petId(petId)
                 .build();
     }
 

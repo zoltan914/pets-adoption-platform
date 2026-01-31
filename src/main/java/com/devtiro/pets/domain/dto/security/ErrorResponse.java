@@ -1,4 +1,4 @@
-package com.devtiro.pets.domain.dto;
+package com.devtiro.pets.domain.dto.security;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

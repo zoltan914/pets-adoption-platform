@@ -22,6 +22,6 @@ public class MedicalRecordDto {
 
     private String createdBy;
     private LocalDateTime createdAt;
-    private String lastModifiedBy;
+    private String updatedBy;
     private LocalDateTime updatedAt;
 }

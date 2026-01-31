@@ -58,7 +58,4 @@ public class Pet extends Auditing {
     @GeoPointField
     private GeoPoint location;
 
-    @Field(type = FieldType.Nested)
-    private List<Photo> photos = new ArrayList<>();
-
 }
