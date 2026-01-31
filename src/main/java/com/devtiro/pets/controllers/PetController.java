@@ -9,6 +9,10 @@ import com.devtiro.pets.services.PetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +30,19 @@ public class PetController {
     public List<PetDto> getAllPets() {
         return petService.getAllPets();
     }
+
+    // USER role
+    @GetMapping("/available")
+    public Page<PetDto> getAllAvailablePets(
+            @PageableDefault(
+                    size = 20,
+                    page = 0,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return petService.getAllAvailablePets(pageable);
+    }
+
 
     @PostMapping
     public PetDto createPet(

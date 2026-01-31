@@ -13,6 +13,8 @@ import com.devtiro.pets.repositories.PetRepository;
 import com.devtiro.pets.services.PetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,12 @@ public class PetServiceImpl implements PetService {
         return pets.stream()
                 .map(petMapper::toPetDto)
                 .toList();
+    }
+
+    @Override
+    public Page<PetDto> getAllAvailablePets(Pageable pageable) {
+        Page<Pet> pets = petRepository.findAllByStatus(PetStatus.AVAILABLE, pageable);
+        return pets.map(petMapper::toPetDto);
     }
 
     @Override
