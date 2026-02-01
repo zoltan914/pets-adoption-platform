@@ -38,10 +38,12 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public PetDto getAvailablePetById(String petId) {
-        Pet pet = petRepository.findByIdAndStatus(petId, PetStatus.AVAILABLE)
+        Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
-        System.out.println("Pet status in ES: " + pet.getStatus());
-        System.out.println("Status class: " + pet.getStatus().getClass());
+        // TODO: user can only request information about AVAILABLE pets
+        // if (!pet.getStatus().equals(PetStatus.AVAILABLE)) {
+        //    throw new UnauthorizedException("You are not allowed to use this service");
+        // }
         return petMapper.toPetDto(pet);
     }
 
