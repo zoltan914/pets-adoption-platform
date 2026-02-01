@@ -1,9 +1,6 @@
 package com.devtiro.pets.controllers;
 
-import com.devtiro.pets.domain.dto.PetCreateRequest;
-import com.devtiro.pets.domain.dto.PetDto;
-import com.devtiro.pets.domain.dto.PetStatusUpdateRequest;
-import com.devtiro.pets.domain.dto.PetUpdateRequest;
+import com.devtiro.pets.domain.dto.*;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.services.PetService;
 import jakarta.validation.Valid;
@@ -13,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,5 +71,17 @@ public class PetController {
             @PathVariable String petId
     ) {
         petService.deletePet(petId);
+    }
+
+    @PostMapping("/search")
+    public Page<PetDto> searchPets(
+            @RequestBody PetSearchRequest request,
+            @PageableDefault(
+                    size = 20,
+                    page = 0
+            )
+            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return petService.searchPets(request, pageable);
     }
 }

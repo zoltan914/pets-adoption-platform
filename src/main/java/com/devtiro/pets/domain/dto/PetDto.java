@@ -28,6 +28,7 @@ public class PetDto {
     private PetStatus status;
     private AddressDto address;
     private GeoPointDto location;
+    private Double distance;
 
     private String createdBy;
     private String updatedBy;

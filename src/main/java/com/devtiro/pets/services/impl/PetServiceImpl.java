@@ -1,15 +1,13 @@
 package com.devtiro.pets.services.impl;
 
-import com.devtiro.pets.domain.dto.PetCreateRequest;
-import com.devtiro.pets.domain.dto.PetDto;
-import com.devtiro.pets.domain.dto.PetStatusUpdateRequest;
-import com.devtiro.pets.domain.dto.PetUpdateRequest;
+import com.devtiro.pets.domain.dto.*;
 import com.devtiro.pets.domain.entity.Pet;
 import com.devtiro.pets.domain.entity.PetStatus;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.exceptions.PetNotFoundException;
 import com.devtiro.pets.mappers.PetMapper;
 import com.devtiro.pets.repositories.PetRepository;
+import com.devtiro.pets.services.PetSearchService;
 import com.devtiro.pets.services.PetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +24,7 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
     private final PetMapper petMapper;
+    private final PetSearchService petSearchService;
 
     @Override
     public List<PetDto> getAllPets() {
@@ -68,13 +67,13 @@ public class PetServiceImpl implements PetService {
                 .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
 
         if (existingPet.getStatus().equals(request.getStatus())) {
-            throw new IllegalArgumentException("Pet is already in this status: " +  request.getStatus());
+            throw new IllegalArgumentException("Pet is already in this status: " + request.getStatus());
         }
 
         existingPet.setStatus(request.getStatus());
 
         Pet updatedPet = petRepository.save(existingPet);
-        log.info("Pet status updated to: {}",  updatedPet.getStatus());
+        log.info("Pet status updated to: {}", updatedPet.getStatus());
         return petMapper.toPetDto(updatedPet);
     }
 
@@ -83,8 +82,14 @@ public class PetServiceImpl implements PetService {
         Pet existingPet = petRepository.findById(petId)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
 
-        log.info("Pet to deleted with id: {}",  existingPet.getId());
+        log.info("Pet to deleted with id: {}", existingPet.getId());
         petRepository.delete(existingPet);
     }
+
+    @Override
+    public Page<PetDto> searchPets(PetSearchRequest request, Pageable pageable) {
+        return petSearchService.searchPets(request, pageable);
+    }
+
 
 }

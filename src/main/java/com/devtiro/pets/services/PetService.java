@@ -7,6 +7,7 @@ import com.devtiro.pets.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PetService {
@@ -23,6 +24,6 @@ public interface PetService {
 
     void deletePet(String petId);
 
-
+    Page<PetDto> searchPets(PetSearchRequest request, Pageable pageable);
 
 }
