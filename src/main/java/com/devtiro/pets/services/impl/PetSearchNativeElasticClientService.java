@@ -1,4 +1,4 @@
-package com.devtiro.pets.services;
+package com.devtiro.pets.services.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.DistanceUnit;
@@ -15,6 +15,7 @@ import com.devtiro.pets.domain.dto.PetSearchRequest;
 import com.devtiro.pets.domain.entity.Pet;
 import com.devtiro.pets.domain.entity.PetStatus;
 import com.devtiro.pets.mappers.PetMapper;
+import com.devtiro.pets.services.PetSearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
