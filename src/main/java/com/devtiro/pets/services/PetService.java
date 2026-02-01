@@ -1,18 +1,17 @@
 package com.devtiro.pets.services;
 
 import com.devtiro.pets.domain.dto.*;
-import com.devtiro.pets.domain.entity.Pet;
-import com.devtiro.pets.domain.entity.PetStatus;
 import com.devtiro.pets.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface PetService {
 
     List<PetDto> getAllPets();
+
+    PetDto getAvailablePetById(String petId);
 
     Page<PetDto> getAllAvailablePets(Pageable pageable);
 

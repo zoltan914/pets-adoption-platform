@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class SpringSecurityAuditorAware implements AuditorAware<String> {

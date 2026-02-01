@@ -1,6 +1,5 @@
 package com.devtiro.pets.services.impl;
 
-import com.devtiro.pets.domain.dto.PetDto;
 import com.devtiro.pets.domain.dto.PhotoDto;
 import com.devtiro.pets.domain.dto.PhotoUploadRequest;
 import com.devtiro.pets.domain.entity.Pet;

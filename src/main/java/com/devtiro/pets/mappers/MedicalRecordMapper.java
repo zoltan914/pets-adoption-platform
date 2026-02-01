@@ -2,9 +2,7 @@ package com.devtiro.pets.mappers;
 
 import com.devtiro.pets.domain.dto.MedicalRecordDto;
 import com.devtiro.pets.domain.dto.MedicalRecordUpdateRequest;
-import com.devtiro.pets.domain.dto.PetUpdateRequest;
 import com.devtiro.pets.domain.entity.MedicalRecord;
-import com.devtiro.pets.domain.entity.Pet;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)

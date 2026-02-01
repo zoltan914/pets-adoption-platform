@@ -11,6 +11,7 @@ import com.devtiro.pets.services.PetSearchService;
 import com.devtiro.pets.services.PetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
     private final PetMapper petMapper;
+    @Qualifier("native")
     private final PetSearchService petSearchService;
 
     @Override
@@ -32,6 +34,15 @@ public class PetServiceImpl implements PetService {
         return pets.stream()
                 .map(petMapper::toPetDto)
                 .toList();
+    }
+
+    @Override
+    public PetDto getAvailablePetById(String petId) {
+        Pet pet = petRepository.findByIdAndStatus(petId, PetStatus.AVAILABLE)
+                .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
+        System.out.println("Pet status in ES: " + pet.getStatus());
+        System.out.println("Status class: " + pet.getStatus().getClass());
+        return petMapper.toPetDto(pet);
     }
 
     @Override

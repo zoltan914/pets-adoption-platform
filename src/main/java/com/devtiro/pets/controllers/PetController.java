@@ -30,6 +30,14 @@ public class PetController {
     }
 
     // USER role
+    @GetMapping("/{petId}")
+    public PetDto getAvailablePetById(
+            @PathVariable("petId") String petId
+    ) {
+        return petService.getAvailablePetById(petId);
+    }
+
+    // USER role
     @GetMapping("/available")
     public Page<PetDto> getAllAvailablePets(
             @PageableDefault(

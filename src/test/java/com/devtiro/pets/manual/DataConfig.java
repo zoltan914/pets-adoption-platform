@@ -8,7 +8,6 @@ import com.devtiro.pets.repositories.PetRepository;
 import com.devtiro.pets.repositories.PhotoRepository;
 import com.devtiro.pets.repositories.UserRepository;
 import com.devtiro.pets.services.AuthService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
