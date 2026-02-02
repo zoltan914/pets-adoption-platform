@@ -404,33 +404,6 @@ GET /api/pets/search?species=CAT&petSize=SMALL&lat=37.7749&lon=-122.4194&distanc
 
 The postman collection contains additional tests as well.
 
-### Performance Considerations
-
-| Aspect | Criteria Query | Native Client |
-|--------|----------------|---------------|
-| **Development Speed** | ⚡ Faster | 🐌 Slower |
-| **Code Readability** | ✅ Higher | ⚠️ Lower |
-| **Query Performance** | ✅ Good | ⚡ Excellent |
-| **Flexibility** | ⚠️ Limited | ✅ Full Control |
-| **Learning Curve** | 📘 Easy | 📕 Moderate |
-| **Maintenance** | ✅ Easier | ⚠️ More Complex |
-
-### When to Choose Which?
-
-#### Choose **Criteria Query** if:
-- You're building a prototype or MVP
-- Your team is more familiar with Spring Data
-- You have standard search requirements
-- You prioritize development speed and code readability
-- You want better integration with Spring ecosystem
-
-#### Choose **Native Client** if:
-- You need maximum performance
-- You require advanced Elasticsearch features
-- You have complex query requirements
-- Your team has strong Elasticsearch expertise
-- You need fine-grained control over queries
-
 ### Distance Calculation
 
 Both implementations calculate distance from the search location to each pet:
