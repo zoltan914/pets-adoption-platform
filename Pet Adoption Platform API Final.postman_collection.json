@@ -511,6 +511,21 @@
         },
         {
           "name": "Create Pet (USER - Should Fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -846,6 +861,101 @@
           "response": []
         },
         {
+          "name": "Add Medical Record (USER - should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"VACCINATION\",\n  \"description\": \"Rabies vaccination\",\n  \"appointmentDate\": \"2025-01-10T10:00:00\",\n  \"veterinarian\": \"Dr. Smith\",\n  \"notes\": \"Annual vaccination completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medical-records/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Medical Record (UNATHENTICATED- should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "disabled": true
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"VACCINATION\",\n  \"description\": \"Rabies vaccination\",\n  \"appointmentDate\": \"2025-01-10T10:00:00\",\n  \"veterinarian\": \"Dr. Smith\",\n  \"notes\": \"Annual vaccination completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medical-records/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Update Medical Record",
           "request": {
             "method": "PUT",
@@ -900,6 +1010,45 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{staffToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/medical-records/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Medical Records (USER - should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
               }
             ],
             "url": {
