@@ -69,18 +69,18 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 
 ### Current Implementation
 
-| Feature Category | Status | Details                                         |
-|-----------------|--------|-------------------------------------------------|
+| Feature Category | Status | Details                                           |
+|-----------------|--------|---------------------------------------------------|
 | **Pet Browsing & Search** | ✅ Complete | Full search with filters, pagination, geolocation |
-| **Pet Management** | ✅ Complete | CRUD operations for pets (Staff only)           |
-| **Photo Management** | ✅ Complete | Upload, view, delete multiple photos per pet    |
-| **Medical Records** | ✅ Complete | Track vaccinations, health checks, procedures   |
-| **User Authentication** | ✅ Complete | JWT-based auth with roles (USER, STAFF)    |
-| **Search Implementations** | ✅ Complete | Two approaches: Criteria Query & Native Client  |
-| **Data Seeding** | ✅ Complete | Test utility with 45+ sample pets               |
-| **Adoption Applications** | 🔴 Not Implemented | Planned for future release                      |
-| **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not planned (Nice to have)                      |
-| **Favorites/Wishlist** | 🔴 Not Implemented | Not planned (Nice to have)                                    |
+| **Pet Management** | ✅ Complete | CRUD operations for pets (Staff only)             |
+| **Photo Management** | ✅ Complete | Upload, view, delete multiple photos per pet      |
+| **Medical Records** | ✅ Complete | Track vaccinations, health checks, procedures     |
+| **User Authentication** | ✅ Complete | JWT-based auth with roles (USER, STAFF)           |
+| **Search Implementations** | ✅ Complete | Two approaches: Criteria Query & Native Client    |
+| **Data Seeding** | ✅ Complete | Test utility with 45+ sample pets                 |
+| **Adoption Applications** | 🔴 Not Implemented | Planned for future release                        |
+| **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
+| **Favorites/Wishlist** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
 
 
 
