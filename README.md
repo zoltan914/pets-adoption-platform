@@ -608,7 +608,6 @@ The platform uses JWT (JSON Web Tokens) for authentication:
 
 - **USER**: Can browse pets, submit applications, save favorites
 - **STAFF**: All USER permissions + manage pet listings, process applications
-- **ADMIN**: All STAFF permissions + user management
 
 ### Security Headers
 
