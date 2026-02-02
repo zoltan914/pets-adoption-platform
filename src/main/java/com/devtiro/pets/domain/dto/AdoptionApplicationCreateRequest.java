@@ -18,21 +18,8 @@ public class AdoptionApplicationCreateRequest {
     @NotBlank(message = "Pet ID is required")
     private String petId;
 
-    // Personal Contact Information
-    @NotBlank(message = "First name is required")
-    private String firstName;
-
-    @NotBlank(message = "Last name is required")
-    private String lastName;
-
-    @NotBlank(message = "Phone number is required")
-    private String phoneNumber;
-
+    // Personal Contact Information - additional info
     private String alternatePhone;
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email must be valid")
-    private String email;
 
     @NotNull(message = "Address is required")
     @Valid
