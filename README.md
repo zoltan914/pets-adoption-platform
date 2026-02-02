@@ -328,6 +328,8 @@ The project includes a Postman collection for API testing: `Pet Adoption Platfor
 
 The Pet Adoption Platform provides **two different search implementations** for querying pets based on various criteria. Both implementations offer the same functionality but use different approaches to interact with Elasticsearch.
 
+For detailed information about the data seeding utility, see the [Search Implementation Guide](Search_Implementation_Guide.md).
+
 ### Available Implementations
 
 #### 1. **Criteria Query Service** (Spring Data Elasticsearch)
