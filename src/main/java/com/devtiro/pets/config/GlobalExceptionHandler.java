@@ -2,6 +2,7 @@ package com.devtiro.pets.config;
 
 import com.devtiro.pets.domain.dto.security.ErrorResponse;
 import com.devtiro.pets.exceptions.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: update the other exceptionhandlers like handleUserAlreadyExists
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
+
+    // TODO
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, HttpServletRequest servletRequest) {
         log.warn("User already exists: {}", ex.getMessage());
-        ErrorResponse error = new ErrorResponse("USER_ALREADY_EXISTS", ex.getMessage());
+        ErrorResponse error = new ErrorResponse();
+        error.setError("CONFLICT");
+        error.setMessage(ex.getMessage());
+        error.setCode("USER_ALREADY_EXISTS");
+        error.setPath(servletRequest.getRequestURI());
+        error.setStatus(HttpStatus.CONFLICT.value());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
