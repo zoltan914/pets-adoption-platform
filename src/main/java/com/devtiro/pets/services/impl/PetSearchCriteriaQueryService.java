@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service("criteria")
@@ -37,7 +38,14 @@ public class PetSearchCriteriaQueryService implements PetSearchService {
         Criteria elasticCriteria = buildSearchCriteria(request);
 
         // Build the query with sorting and pagination
-        Query query = buildQuery(elasticCriteria, request, pageable);
+        Query query = buildSorting(elasticCriteria, request, pageable);
+
+        // Set pageable without sort, it was handled right before this
+        Pageable pageableWithoutSort = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+        query.setPageable(pageableWithoutSort);
 
         SearchHits<Pet> searchHits = elasticsearchOperations.search(query, Pet.class);
 
@@ -48,8 +56,7 @@ public class PetSearchCriteriaQueryService implements PetSearchService {
                     PetDto dto = petMapper.toPetDto(pet);
 
                     // Calculate and set distance if this is a geolocation search
-                    if (request.getLocation() != null && request.getLocation().getLat() != null
-                            && request.getLocation().getLon() != null && pet.getLocation() != null) {
+                    if (hasLocation(request)) {
                         double distance = calculateDistance(
                                 request.getLocation().getLat(),
                                 request.getLocation().getLon(),
@@ -65,7 +72,6 @@ public class PetSearchCriteriaQueryService implements PetSearchService {
         long totalHits = searchHits.getTotalHits();
         return new PageImpl<>(petDtos, pageable, totalHits);
     }
-
 
     private Criteria buildSearchCriteria(PetSearchRequest criteria) {
         List<Criteria> criteriaList = new ArrayList<>();
@@ -113,47 +119,46 @@ public class PetSearchCriteriaQueryService implements PetSearchService {
         return combinedCriteria;
     }
 
-    private Query buildQuery(Criteria criteria, PetSearchRequest request, Pageable pageable) {
+    private Query buildSorting(Criteria criteria, PetSearchRequest request, Pageable pageable) {
         CriteriaQuery query = new CriteriaQuery(criteria);
+        Optional<Sort.Order> explicitGeoOrder = pageable.getSort().stream()
+                .filter(order -> order.getProperty().equalsIgnoreCase("distance")
+                        || order.getProperty().equalsIgnoreCase("closest"))
+                .findFirst();
 
-        Sort sort = pageable.getSort();
-        sort.get().forEach(x -> {
-            Sort.Direction direction = x.getDirection();
-            String property = x.getProperty();
+        // Regular field sorting
+        for (Sort.Order order : pageable.getSort()) {
+            String prop = order.getProperty();
+            Sort.Direction direction = order.getDirection();
 
-            if ((property.equalsIgnoreCase("distance") || property.equalsIgnoreCase("closest"))
-                    && request.getLocation() != null && request.getLocation().getLat() != null
-                    && request.getLocation().getLon() != null
-            ) {
-                // Geo distance sorting
-                GeoPoint geoPoint = new GeoPoint(request.getLocation().getLat(), request.getLocation().getLon());
-                GeoDistanceOrder geoDistanceOrder = new GeoDistanceOrder("location", geoPoint);
+            if (prop.equalsIgnoreCase("distance") || prop.equalsIgnoreCase("closest")) continue;
 
-                if (property.equalsIgnoreCase("closest")) {
-                    geoDistanceOrder = geoDistanceOrder.with(Sort.Direction.ASC);
-                } else {
-                    geoDistanceOrder = geoDistanceOrder.with(direction);
-                }
+            Sort fieldSort = Sort.by(direction, prop);
+            query.addSort(fieldSort);
+        }
+        // Geo distance sorting
+        if (hasLocation(request)) {
+            // If user provided "distance,desc", use DESC. Otherwise, default to ASC.
+            Sort.Direction direction = explicitGeoOrder
+                    .map(Sort.Order::getDirection)
+                    .orElse(Sort.Direction.ASC);
+            Sort geoSort = buildGeoSort(request, direction);
+            query.addSort(geoSort);
+        }
 
-                Sort geoSort = Sort.by(geoDistanceOrder);
-                query.addSort(geoSort);
-            } else {
-                // Regular field sorting
-                Sort fieldSort = Sort.by(direction, property);
-                query.addSort(fieldSort);
-            }
-        });
-
-        // Create a new Pageable WITHOUT the sort (since already added manually above)
-        Pageable pageableWithoutSort = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize()
-        );
-
-        query.setPageable(pageableWithoutSort);
         return query;
+    };
+
+    private Sort buildGeoSort(PetSearchRequest req, Sort.Direction dir) {
+        GeoPoint geoPoint = new GeoPoint(req.getLocation().getLat(), req.getLocation().getLon());
+        GeoDistanceOrder geoDistanceOrder = new GeoDistanceOrder("location", geoPoint);
+        return Sort.by(geoDistanceOrder);
     }
 
+
+    private boolean hasLocation(PetSearchRequest r) {
+        return r.getLocation() != null && r.getLocation().getLat() != null && r.getLocation().getLon() != null;
+    }
 
     /**
      * Calculate distance between two points using Haversine formula
@@ -176,5 +181,6 @@ public class PetSearchCriteriaQueryService implements PetSearchService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return EARTH_RADIUS_KM * c;
-    }
+   }
+
 }
