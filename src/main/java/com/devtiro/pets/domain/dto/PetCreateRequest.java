@@ -21,7 +21,7 @@ public class PetCreateRequest {
     private String name;
 
     @NotBlank(message = "description is required")
-    @Size(max = 1000, message = "description must not exceed 200 characters")
+    @Size(max = 1000, message = "description must not exceed 1000 characters")
     private String description;
 
     @NotNull(message = "species is required")

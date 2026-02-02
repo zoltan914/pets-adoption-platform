@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 public class AddressDto {
     @NotBlank(message = "street is required")
     private String street;
-    @NotBlank(message = "city name is required")
+    @NotBlank(message = "city is required")
     private String city;
-    @NotBlank(message = "state name is required")
+    @NotBlank(message = "state is required")
     private String state;
-    @NotBlank(message = "zipCode name is required")
+    @NotBlank(message = "zipCode is required")
     private String zipCode;
 
 }
