@@ -95,8 +95,9 @@ public class PetServiceImpl implements PetService {
         Pet existingPet = petRepository.findById(petId)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
 
-        log.info("Pet to deleted with id: {}", existingPet.getId());
         petRepository.delete(existingPet);
+
+        log.info("Pet deleted with id: {}", existingPet.getId());
     }
 
     @Override

@@ -55,13 +55,16 @@ public class ElasticsearchConfig {
     }
 
     @Bean
-    public ElasticsearchTransport elasticsearchTransport(RestClient restClient) {
+    public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());  // Support for Java 8 date/time types
-        // IMPORTANT: Ignore unknown properties like _class
+        objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
+    }
 
-        return new RestClientTransport(restClient, new JacksonJsonpMapper(objectMapper));
+    @Bean
+    public ElasticsearchTransport elasticsearchTransport(RestClient restClient) {
+        return new RestClientTransport(restClient, new JacksonJsonpMapper(objectMapper()));
     }
 
     @Bean

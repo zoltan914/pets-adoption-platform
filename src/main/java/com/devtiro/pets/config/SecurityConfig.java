@@ -1,9 +1,12 @@
 package com.devtiro.pets.config;
 
+import com.devtiro.pets.security.CustomAccessDeniedHandler;
+import com.devtiro.pets.security.CustomAuthenticationEntryPoint;
 import com.devtiro.pets.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,13 +34,42 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        // Public endpoints - Authentication
+                        .requestMatchers("/api/auth/**").permitAll()
+
+                        // Public endpoints - Pets (browsing - GET only)
+                        .requestMatchers(HttpMethod.GET, "/api/pets", "/api/pets/available", "/api/pets/{petId}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/pets/search").permitAll()
+
+                        // Public endpoints - Photos (viewing - GET only)
+                        .requestMatchers(HttpMethod.GET, "/api/photos/{petId}").permitAll()
+
+                        // STAFF only endpoints - Pet Management (POST, PUT, PATCH, DELETE)
+                        .requestMatchers(HttpMethod.POST, "/api/pets").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.PUT, "/api/pets/{petId}").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.PATCH, "/api/pets/{petId}/status").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pets/{petId}").hasRole("STAFF")
+
+                        // STAFF only endpoints - Photo Management (POST)
+                        .requestMatchers(HttpMethod.POST, "/api/photos/{petId}").hasRole("STAFF")
+
+                        // STAFF only endpoints - Medical Records (all operations)
+                        .requestMatchers("/api/medical-records/**").hasRole("STAFF")
+
+                        // All other requests must be authenticated
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

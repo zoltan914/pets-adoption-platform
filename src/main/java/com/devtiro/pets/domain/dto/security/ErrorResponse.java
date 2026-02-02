@@ -13,10 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
-    
+
     private String code;
     private String message;
-    
+    private Integer status;
+    private String error;
+    private String path;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
