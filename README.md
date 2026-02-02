@@ -6,6 +6,7 @@ A comprehensive web-based platform connecting potential pet adopters with animal
 
 - [Overview](#overview)
 - [Features](#features)
+- [Implementation Status](#-implementation-status)
 - [Technology Stack](#technology-stack)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
@@ -17,7 +18,7 @@ A comprehensive web-based platform connecting potential pet adopters with animal
 - [User Stories](#user-stories)
 - [Security](#security)
 - [Contributing](#contributing)
-- [License](#license)
+- [Acknowledgements](#-acknowledgments)
 
 ## 🎯 Overview
 
@@ -30,6 +31,8 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - **Application Status**: The current state of an adoption application (pending, approved, or rejected).
 
 ## ✨ Features
+
+### ✅ Implemented Features
 
 ### For Potential Adopters
 - 🔍 **Advanced Search & Filtering**: Search pets by species, age, size, and location
@@ -46,6 +49,13 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - 🔄 **Status Updates**: Update pet availability status (Available, On Hold, Adopted)
 - 🔐 **Secure Authentication**: Role-based access control for shelter staff
 
+### 🔴 Planned Features (Not Yet Implemented)
+- 📝 **Adoption Applications**: Submit and track adoption applications
+- 💾 **Draft Applications**: Save application progress and complete later
+- 📊 **Application Tracking**: Monitor the status of your applications
+- 💗 **Favorites/Wishlist**: Save favorite pets for later viewing
+- 📅 **Meet-and-Greet Scheduling**: Schedule visits with pets
+
 ### Technical Features
 - 🔎 **Elasticsearch Integration**: Fast, scalable search with advanced filtering
 - 🔀 **Dual Search Implementations**: Choose between Criteria Query (Spring Data) or Native Client (low-level)
@@ -53,6 +63,56 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - 💨 **Caching**: Improved performance with Caffeine cache
 - 📊 **Audit Trail**: Track creation and modification of records
 - 🌐 **RESTful API**: Well-documented API endpoints
+
+
+## ✅ Implementation Status
+
+### Current Implementation
+
+| Feature Category | Status | Details |
+|-----------------|--------|---------|
+| **Pet Browsing & Search** | ✅ Complete | Full search with filters, pagination, geolocation |
+| **Pet Management** | ✅ Complete | CRUD operations for pets (Staff only) |
+| **Photo Management** | ✅ Complete | Upload, view, delete multiple photos per pet |
+| **Medical Records** | ✅ Complete | Track vaccinations, health checks, procedures |
+| **User Authentication** | ✅ Complete | JWT-based auth with roles (USER, STAFF, ADMIN) |
+| **Search Implementations** | ✅ Complete | Two approaches: Criteria Query & Native Client |
+| **Data Seeding** | ✅ Complete | Test utility with 45+ sample pets |
+| **Adoption Applications** | 🔴 Not Implemented | Planned for future release |
+| **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Planned for future release |
+| **Favorites/Wishlist** | 🔴 Not Implemented | Planned for future release |
+| **Application Processing** | 🔴 Not Implemented | Planned for future release |
+
+
+### API Endpoints Status
+
+**✅ Available Endpoints:**
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/refresh` - Refresh access token
+- `GET /api/pets` - Get all pets
+- `GET /api/pets/{id}` - Get pet by ID
+- `POST /api/pets` - Create pet (Staff)
+- `PUT /api/pets/{id}` - Update pet (Staff)
+- `PATCH /api/pets/{id}/status` - Update status (Staff)
+- `DELETE /api/pets/{id}` - Delete pet (Staff)
+- `GET /api/pets/search` - Advanced search with filters
+- `POST /api/pets/{petId}/photos` - Upload photos (Staff)
+- `GET /api/pets/{petId}/photos` - Get pet photos
+- `DELETE /api/photos/{photoId}` - Delete photo (Staff)
+- `POST /api/pets/{petId}/medical-records` - Add medical record (Staff)
+- `GET /api/pets/{petId}/medical-records` - Get medical records
+- `PUT /api/medical-records/{recordId}` - Update medical record (Staff)
+- `DELETE /api/medical-records/{recordId}` - Delete medical record (Staff)
+
+**🔴 Not Available (Planned):**
+- `POST /api/applications` - Submit adoption application
+- `GET /api/applications` - Get user's applications
+- `GET /api/applications/{id}` - Get application details
+- `PUT /api/applications/{id}` - Update application
+- `POST /api/favorites` - Add pet to favorites
+- `GET /api/favorites` - Get user's favorite pets
+- `DELETE /api/favorites/{petId}` - Remove from favorites
 
 ## 🛠 Technology Stack
 
@@ -517,8 +577,21 @@ pets-adoption-platform/
 - ✅ Staff can delete pet listings when necessary
 
 ### Submit Adoption Application
+**As a** potential adopter  
+**I want to** submit an adoption application for a specific pet  
+**So that** I can begin the process of adopting them
 
-Currently not implemented
+**Status:** 🔴 **Not Yet Implemented**
+
+**Acceptance Criteria:**
+- ❌ Users can fill out an adoption application form
+- ❌ Users must provide personal contact information
+- ❌ Users must provide living situation details
+- ❌ Users can save applications as drafts
+- ❌ Users receive confirmation when application is submitted
+- ❌ Users can track application status in their account
+- ❌ Users can't submit multiple applications for the same pet
+
 
 ## 🔐 Security
 
@@ -570,14 +643,7 @@ Contributions are welcome! Please follow these steps:
 - Write unit tests for new features
 - Update documentation as needed
 
-## 📄 License
+## 📄 Acknowledgments
 
-Copyright © Devtiro Ltd 2025. All rights reserved.
+- <h3>Devtiro for project brief, and youtube videos (www.youtube.com/@devtiro)</h3>
 
-## 📧 Support
-
-For support and questions, please refer to the project documentation or contact the development team.
-
----
-
-**Built with ❤️ by Devtiro Ltd**
