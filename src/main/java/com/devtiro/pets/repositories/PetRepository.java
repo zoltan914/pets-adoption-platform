@@ -12,10 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface PetRepository extends ElasticsearchRepository<Pet, String> {
-    @Override
-    List<Pet> findAll();
-
-    Optional<Pet> findByIdAndStatus(String petId, PetStatus status);
+    Page<Pet> findAll(Pageable pageable);
 
     Page<Pet> findAllByStatus(PetStatus status, Pageable pageable);
 

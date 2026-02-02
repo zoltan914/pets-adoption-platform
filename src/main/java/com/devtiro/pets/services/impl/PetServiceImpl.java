@@ -5,6 +5,7 @@ import com.devtiro.pets.domain.entity.Pet;
 import com.devtiro.pets.domain.entity.PetStatus;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.exceptions.PetNotFoundException;
+import com.devtiro.pets.exceptions.UnauthorizedException;
 import com.devtiro.pets.mappers.PetMapper;
 import com.devtiro.pets.repositories.PetRepository;
 import com.devtiro.pets.services.PetSearchService;
@@ -29,21 +30,18 @@ public class PetServiceImpl implements PetService {
     private final PetSearchService petSearchService;
 
     @Override
-    public List<PetDto> getAllPets() {
-        List<Pet> pets = petRepository.findAll();
-        return pets.stream()
-                .map(petMapper::toPetDto)
-                .toList();
+    public Page<PetDto> getAllPets(Pageable pageable) {
+        Page<Pet> pets = petRepository.findAll(pageable);
+        return pets.map(petMapper::toPetDto);
     }
 
     @Override
     public PetDto getAvailablePetById(String petId) {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new PetNotFoundException("Pet not found with id: " + petId));
-        // TODO: user can only request information about AVAILABLE pets
-        // if (!pet.getStatus().equals(PetStatus.AVAILABLE)) {
-        //    throw new UnauthorizedException("You are not allowed to use this service");
-        // }
+        if (!pet.getStatus().equals(PetStatus.AVAILABLE)) {
+            throw new UnauthorizedException("You are not allowed to see this Pet");
+        }
         return petMapper.toPetDto(pet);
     }
 

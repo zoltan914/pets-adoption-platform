@@ -27,8 +27,14 @@ public class PetController {
 
     @PreAuthorize("hasRole('STAFF')")
     @GetMapping
-    public List<PetDto> getAllPets() {
-        return petService.getAllPets();
+    public Page<PetDto> getAllPets(
+            @PageableDefault(
+                    size = 20,
+                    page = 0,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return petService.getAllPets(pageable);
     }
 
     @PreAuthorize("hasAnyRole('STAFF','USER')")

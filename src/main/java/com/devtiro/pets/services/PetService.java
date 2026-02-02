@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PetService {
 
-    List<PetDto> getAllPets();
+    Page<PetDto> getAllPets(Pageable pageable);
 
     PetDto getAvailablePetById(String petId);
 
