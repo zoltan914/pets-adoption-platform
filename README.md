@@ -81,7 +81,7 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 | **Adoption Applications** | 🔴 Not Implemented | Planned for future release                      |
 | **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not planned (Nice to have)                      |
 | **Favorites/Wishlist** | 🔴 Not Implemented | Not planned (Nice to have)                                    |
-| **Application Processing** | 🔴 Not Implemented | Not planned (Nice to have)                                    |
+
 
 
 ### API Endpoints Status
