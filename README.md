@@ -78,7 +78,7 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 | **User Authentication** | ✅ Complete | JWT-based auth with roles (USER, STAFF)           |
 | **Search Implementations** | ✅ Complete | Two approaches: Criteria Query & Native Client    |
 | **Data Seeding** | ✅ Complete | Test utility with 45+ sample pets                 |
-| **Adoption Applications** | 🔴 Not Implemented | Planned for future release                        |
+| **Adoption Applications** | 🟡 Not Implemented | Planned for future release (ongoing)              |
 | **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
 | **Favorites/Wishlist** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
 
