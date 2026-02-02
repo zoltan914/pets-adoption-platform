@@ -1,0 +1,1028 @@
+{
+  "info": {
+    "_postman_id": "833883f5-35bb-44be-a03c-0502a1888c08",
+    "name": "Pet Adoption Platform API Final",
+    "description": "API collection for testing the Pet Adoption Platform with security",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13581088"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Staff",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Staff\",\n    \"lastName\": \"Kevin\",\n    \"phoneNumber\": \"30130120\",\n    \"username\": \"staffuser\",\n    \"email\": \"staff@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"STAFF\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Staff",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"staffToken\", jsonData.accessToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"staff@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"User\",\n    \"lastName\": \"Arnold\",\n    \"phoneNumber\": \"302320120\",\n    \"username\": \"testuser\",\n    \"email\": \"user@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"userToken\", jsonData.accessToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register User 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"User\",\n    \"lastName\": \"James\",\n    \"phoneNumber\": \"35550120\",\n    \"username\": \"testuser2\",\n    \"email\": \"user2@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"userToken2\", jsonData.accessToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user2@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pets - User Role",
+      "item": [
+        {
+          "name": "Get All Available Pets (USER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/available?size=30",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "available"
+              ],
+              "query": [
+                {
+                  "key": "size",
+                  "value": "30"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Available Pets (USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"user_search_pet_id\", jsonData.content[0].id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"species\": \"DOG\",\n    \"minAge\": 1,\n    \"maxAge\": 20,\n    \"petSize\": \"SMALL\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/search?size=15&sort=age,asc&sort=createdAt,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "size",
+                  "value": "15"
+                },
+                {
+                  "key": "sort",
+                  "value": "age,asc"
+                },
+                {
+                  "key": "sort",
+                  "value": "createdAt,asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Pets - All Available (USER)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"AVAILABLE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/pets/search",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pets",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Pets - Multiple Filters (USER)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"species\": \"CAT\",\r\n    \"petSize\": \"MEDIUM\",\r\n    \"minAge\":6,\r\n    \"maxAge\": 36\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/pets/search?sort=age,asc",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pets",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "age,asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Pets - Dogs Near Location Without Sort (USER)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"species\": \"DOG\",\r\n    \"location\": {\r\n        \"lat\": 37.7749,\r\n        \"lon\": -122.4194\r\n    },\r\n    \"distance\": 100\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/pets/search",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pets",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Pets - Dogs Near Location With Sort (USER)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"species\": \"DOG\",\r\n    \"location\": {\r\n        \"lat\": 37.7749,\r\n        \"lon\": -122.4194\r\n    },\r\n    \"distance\": 100\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/pets/search?sort=age,asc&sort=distance,desc",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pets",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "age,asc"
+                },
+                {
+                  "key": "sort",
+                  "value": "closest",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "distance,desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Pet By ID (USER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/{{user_search_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "{{user_search_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Pet (USER - Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Buddy\",\n  \"description\": \"A friendly dog looking for a home.\",\n  \"species\": \"DOG\",\n  \"age\": 3,\n  \"petSize\": \"MEDIUM\",\n  \"status\": \"AVAILABLE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pets - Staff Role",
+      "item": [
+        {
+          "name": "Create Pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"staff_created_pet_id\", jsonData.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Buddy\",\n  \"description\": \"Buddy is a friendly and playful medium-sized dog who loves outdoor activities and meeting new people. He's well-behaved, house-trained, and gets along great with other pets.\",\n  \"species\": \"DOG\",\n  \"age\": 3,\n  \"petSize\": \"MEDIUM\",\n  \"status\": \"AVAILABLE\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"location\": {\n    \"lat\": 39.7817,\n    \"lon\": -89.6501\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Pet To Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"staff_created_pet_id_to_be_deleted\", jsonData.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ToBeDeleted\",\n  \"description\": \"ToBeDeleted is a friendly and playful medium-sized dog who loves outdoor activities and meeting new people. He's well-behaved, house-trained, and gets along great with other pets.\",\n  \"species\": \"DOG\",\n  \"age\": 3,\n  \"petSize\": \"MEDIUM\",\n  \"status\": \"AVAILABLE\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"location\": {\n    \"lat\": 39.7817,\n    \"lon\": -89.6501\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Photos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"url\": \"https://images.unsplash.com/photo-1543466835-00a7907e9de1\"\n    },\n    {\n        \"url\": \"https://images.unsplash.com/photo-1543466835-00a7907e9de1\"\n    }\n]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "photos",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Uploaded Photos For Pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "photos",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Pet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Buddy Updated\",\n  \"age\": 4,\n  \"description\": \"Buddy is a friendly and playful dog who has recently completed advanced training. He's great with families and loves outdoor adventures.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Pet Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"ON_HOLD\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/{{staff_created_pet_id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "{{staff_created_pet_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Medical Record",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"medical_record_id\", jsonData.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"VACCINATION\",\n  \"description\": \"Rabies vaccination\",\n  \"appointmentDate\": \"2025-01-10T10:00:00\",\n  \"veterinarian\": \"Dr. Smith\",\n  \"notes\": \"Annual vaccination completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medical-records/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Medical Record",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"notes\": \"Updated notes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medical-records/{{medical_record_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{{medical_record_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Medical Records",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/medical-records/{{staff_created_pet_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                "{{staff_created_pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Pet",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/{{staff_created_pet_id_to_be_deleted}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "{{staff_created_pet_id_to_be_deleted}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check if Pet is Deleted",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "let deletedId = pm.environment.get(\"staff_created_pet_id_to_be_deleted\");\r",
+                  "\r",
+                  "pm.test(\"Pet is not found in the list\", function () {\r",
+                  "    let deletedPet = jsonData.find(pet => pet.id === deletedId);\r",
+                  "\r",
+                  "    pm.expect(deletedPet).to.be.undefined;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "staffToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "draft_application_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "submitted_application_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userToken2",
+      "value": ""
+    },
+    {
+      "key": "submitted_application_id2",
+      "value": ""
+    },
+    {
+      "key": "before_delete_application_count",
+      "value": ""
+    }
+  ]
+}
