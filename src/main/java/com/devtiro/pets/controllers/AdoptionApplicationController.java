@@ -23,6 +23,11 @@ public class AdoptionApplicationController {
 
     private final AdoptionApplicationService adoptionApplicationService;
 
+    /**
+     * Create a new adoption application
+     * Can be saved as draft (isDraft=true) or submitted immediately (isDraft=false)
+     * Users cannot submit multiple applications for the same pet
+     */
     @PostMapping
     public ResponseEntity<AdoptionApplicationDto> createAdoptionApplication(
             @Valid @RequestBody AdoptionApplicationCreateRequest request,
@@ -32,6 +37,10 @@ public class AdoptionApplicationController {
         return new ResponseEntity<>(application, HttpStatus.CREATED);
     }
 
+    /**
+     * Update a draft application
+     * Only the applicant can update their own draft applications
+     */
     @PutMapping("/{applicationId}")
     public ResponseEntity<AdoptionApplicationDto> updateApplication(
             @PathVariable String applicationId,
@@ -42,4 +51,20 @@ public class AdoptionApplicationController {
                 applicationId, request, applicant);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Submit a draft application
+     * Changes status from DRAFT to SUBMITTED
+     */
+    @PostMapping("/{applicationId}/submit")
+    public ResponseEntity<AdoptionApplicationDto> submitApplication(
+            @PathVariable String applicationId,
+            @AuthenticationPrincipal User applicant) {
+
+        AdoptionApplicationDto response = adoptionApplicationService.submitApplication(
+                applicationId, applicant);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
