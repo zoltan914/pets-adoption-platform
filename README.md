@@ -97,13 +97,11 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - `PATCH /api/pets/{id}/status` - Update status (Staff)
 - `DELETE /api/pets/{id}` - Delete pet (Staff)
 - `GET /api/pets/search` - Advanced search with filters
-- `POST /api/pets/{petId}/photos` - Upload photos (Staff)
-- `GET /api/pets/{petId}/photos` - Get pet photos
-- `DELETE /api/photos/{photoId}` - Delete photo (Staff)
-- `POST /api/pets/{petId}/medical-records` - Add medical record (Staff)
-- `GET /api/pets/{petId}/medical-records` - Get medical records
-- `PUT /api/medical-records/{recordId}` - Update medical record (Staff)
-- `DELETE /api/medical-records/{recordId}` - Delete medical record (Staff)
+- `POST /api/photos/{petId}` - Upload photos (Staff)
+- `GET /api/photos/{petId}` - Get pet photos
+- `GET /api/medical-records/{petId}` - Get all medical records for a pet (Staff)
+- `POST /api/medical-records/{petId}` - Add medical record (Staff)
+- `PUT /api/medical-records/{medicalRecordId}` - Update medical record (Staff)
 
 **🔴 Not Available (Planned):**
 - `POST /api/applications` - Submit adoption application
@@ -314,15 +312,13 @@ The project includes a Postman collection for API testing: `Pet Adoption Platfor
 - `GET /api/pets/search` - Advanced search with filters
 
 #### Photos
-- `POST /api/pets/{petId}/photos` - Upload pet photos (Staff only)
-- `GET /api/pets/{petId}/photos` - Get all photos for a pet
-- `DELETE /api/photos/{photoId}` - Delete a photo (Staff only)
+- `POST /api/photos/{petId}` - Upload photos (Staff)
+- `GET /api/photos/{petId}` - Get pet photos
 
 #### Medical Records
-- `POST /api/pets/{petId}/medical-records` - Add medical record (Staff only)
-- `GET /api/pets/{petId}/medical-records` - Get medical records for a pet
-- `PUT /api/medical-records/{recordId}` - Update medical record (Staff only)
-- `DELETE /api/medical-records/{recordId}` - Delete medical record (Staff only)
+- `GET /api/medical-records/{petId}` - Get All medical records for a pet (Staff)
+- `POST /api/medical-records/{petId}` - Add medical record (Staff)
+- `PUT /api/medical-records/{medicalRecordId}` - Update medical record (Staff)
 
 ## 🔍 Search Implementations
 

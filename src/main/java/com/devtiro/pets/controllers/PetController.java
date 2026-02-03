@@ -25,8 +25,8 @@ public class PetController {
 
     private final PetService petService;
 
-    @PreAuthorize("hasRole('STAFF')")
     @GetMapping
+    @PreAuthorize("hasRole('STAFF')")
     public Page<PetDto> getAllPets(
             @PageableDefault(
                     size = 20,
@@ -37,16 +37,16 @@ public class PetController {
         return petService.getAllPets(pageable);
     }
 
-    @PreAuthorize("hasAnyRole('STAFF','USER')")
     @GetMapping("/{petId}")
+    @PreAuthorize("hasAnyRole('STAFF','USER')")
     public PetDto getAvailablePetById(
             @PathVariable("petId") String petId
     ) {
         return petService.getAvailablePetById(petId);
     }
 
-    @PreAuthorize("hasAnyRole('STAFF','USER')")
     @GetMapping("/available")
+    @PreAuthorize("hasAnyRole('STAFF','USER')")
     public Page<PetDto> getAllAvailablePets(
             @PageableDefault(
                     size = 20,
@@ -57,8 +57,8 @@ public class PetController {
         return petService.getAllAvailablePets(pageable);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
     @PostMapping
+    @PreAuthorize("hasRole('STAFF')")
     public PetDto createPet(
             @Valid @RequestBody PetCreateRequest request,
             @AuthenticationPrincipal User staff
@@ -66,8 +66,8 @@ public class PetController {
         return petService.createPet(request, staff);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
     @PutMapping("/{petId}")
+    @PreAuthorize("hasRole('STAFF')")
     public PetDto updatePet(
             @PathVariable String petId,
             @Valid @RequestBody PetUpdateRequest request
@@ -75,8 +75,8 @@ public class PetController {
         return petService.updatePet(petId, request);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
     @PatchMapping("/{petId}/status")
+    @PreAuthorize("hasRole('STAFF')")
     public PetDto updatePetStatus(
             @PathVariable String petId,
             @Valid @RequestBody PetStatusUpdateRequest request
@@ -84,16 +84,16 @@ public class PetController {
         return petService.updatePetStatus(petId, request);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
     @DeleteMapping("/{petId}")
+    @PreAuthorize("hasRole('STAFF')")
     public void deletePet(
             @PathVariable String petId
     ) {
         petService.deletePet(petId);
     }
 
-    @PreAuthorize("hasAnyRole('STAFF','USER')")
     @PostMapping("/search")
+    @PreAuthorize("hasAnyRole('STAFF','USER')")
     public Page<PetDto> searchPets(
             @RequestBody PetSearchRequest request,
             @PageableDefault(
