@@ -3,6 +3,7 @@ package com.devtiro.pets.controllers;
 import com.devtiro.pets.domain.dto.AdoptionApplicationCreateRequest;
 import com.devtiro.pets.domain.dto.AdoptionApplicationDto;
 import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateRequest;
+import com.devtiro.pets.domain.entity.AdoptionApplicationStatus;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.services.AdoptionApplicationService;
 import jakarta.validation.Valid;
@@ -108,5 +109,61 @@ public class AdoptionApplicationController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Get all applications for a specific pet (STAFF only)
+     */
+    @GetMapping("/pet/{petId}")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<Page<AdoptionApplicationDto>> getApplicationsForPet(
+            @PathVariable String petId,
+            @PageableDefault(
+                    size = 20,
+                    page = 0,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+
+        Page<AdoptionApplicationDto> response = adoptionApplicationService.getApplicationsForPet(
+                petId, pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Get all applications by status (STAFF only)
+     */
+    @GetMapping("/status/{status}")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<Page<AdoptionApplicationDto>> getApplicationsByStatus(
+            @PathVariable AdoptionApplicationStatus status,
+            @PageableDefault(
+                    size = 20,
+                    page = 0,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+
+        Page<AdoptionApplicationDto> response = adoptionApplicationService.getApplicationsByStatus(
+                status, pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Get all applications (STAFF only)
+     */
+    @GetMapping
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<Page<AdoptionApplicationDto>> getAllApplications(
+            @PageableDefault(
+                    size = 20,
+                    page = 0,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<AdoptionApplicationDto> response = adoptionApplicationService.getAllApplications(pageable);
+
+        return ResponseEntity.ok(response);
+    }
 
 }

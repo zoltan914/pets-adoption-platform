@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -147,10 +148,36 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
 
     @Override
     public Page<AdoptionApplicationDto> getMyApplications(User applicant, Pageable pageable) {
+        log.info("Getting applications for user {}", applicant.getUsername());
         return applicationRepository.findByApplicantId(applicant.getId(), pageable)
                 .map(adoptionApplicationMapper::toAdoptionApplicationDto);
     }
 
+    @Override
+    public Page<AdoptionApplicationDto> getApplicationsForPet(String petId, Pageable pageable) {
+        log.info("Getting applications for pet {}", petId);
+
+        // Verify pet exists
+        petRepository.findById(petId)
+                .orElseThrow(() -> new PetNotFoundException("Pet not found: " + petId));
+
+        Page<AdoptionApplication> applications = applicationRepository.findAllByPetId(petId, pageable);
+        return applications.map(adoptionApplicationMapper::toAdoptionApplicationDto);
+    }
+
+    @Override
+    public Page<AdoptionApplicationDto> getAllApplications(Pageable pageable) {
+        log.info("Getting all applications");
+
+        Page<AdoptionApplication> applications = applicationRepository.findAll(pageable);
+        return  applications.map(adoptionApplicationMapper::toAdoptionApplicationDto);
+    }
+
+    @Override
+    public Page<AdoptionApplicationDto> getApplicationsByStatus(AdoptionApplicationStatus status, Pageable pageable) {
+        Page<AdoptionApplication> applications = applicationRepository.findAllByStatus(status, pageable);
+        return applications.map(adoptionApplicationMapper::toAdoptionApplicationDto);
+    }
 
     // TODO create validatorservice for this and pet
     private void checkDuplicateApplication(String petId, String applicantId) {
