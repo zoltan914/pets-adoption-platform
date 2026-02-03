@@ -126,7 +126,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         return adoptionApplicationMapper.toAdoptionApplicationDto(submitted);
     }
 
-
+    // TODO create validatorservice for this and pet
     private void checkDuplicateApplication(String petId, String applicantId) {
         // Check if user already has a submitted (non-draft) application for this pet
         Optional<AdoptionApplication> optionalAdoptionApplication = applicationRepository
