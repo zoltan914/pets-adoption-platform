@@ -178,6 +178,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(ApplicationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleApplicationNotFoundException(ApplicationNotFoundException ex, HttpServletRequest servletRequest) {
+        log.warn("Application not found: {}", ex.getMessage());
+        ErrorResponse error = ErrorResponse.builder()
+                .code("PET_NOT_FOUND")
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("NOT_FOUND")
+                .path(servletRequest.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(MedicalRecordNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMedicalRecordNotFoundException(MedicalRecordNotFoundException ex, HttpServletRequest servletRequest) {
         log.warn("Medical record not found: {}", ex.getMessage());

@@ -1,7 +1,6 @@
 package com.devtiro.pets.repositories;
 
 import com.devtiro.pets.domain.entity.AdoptionApplication;
-import com.devtiro.pets.domain.entity.AdoptionApplicationStatus;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 

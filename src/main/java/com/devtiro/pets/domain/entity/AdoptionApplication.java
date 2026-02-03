@@ -24,9 +24,15 @@ public class AdoptionApplication extends Auditing {
     @Field(type = FieldType.Keyword)
     private String petId;
 
+    @Field(type = FieldType.Nested)
+    private Pet pet; // Embedded pet details for easy access
+
     // Reference to the applicant user
     @Field(type = FieldType.Keyword)
     private String applicantId;
+
+    @Field(type = FieldType.Nested)
+    private User applicant; // Embedded user details
 
     // Personal Contact Information
     @Field(type = FieldType.Text)

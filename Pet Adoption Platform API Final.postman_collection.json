@@ -1285,7 +1285,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"petId\": \"{{user_search_pet_id}}\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+0987654321\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"isDraft\": true\n}"
+              "raw": "{\n  \"petId\": \"{{user_search_pet_id}}\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+0987654321\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"additionalComments\": \"i am applying for this pet.\",\n  \"isDraft\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/applications",
@@ -1347,6 +1347,64 @@
               "path": [
                 "api",
                 "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Draft Application (USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application updated successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.firstName).to.eql('User');",
+                  "    pm.expect(jsonData.status).to.eql('DRAFT');",
+                  "});",
+                  "",
+                  "pm.test(\"Updated timestamp changed\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('updatedAt');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alternatePhone\": \"0130123013\",\n  \"additionalComments\": \"Updated comments - very interested in this pet!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{draft_application_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{draft_application_id}}"
               ]
             }
           },

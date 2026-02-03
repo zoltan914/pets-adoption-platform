@@ -2,6 +2,7 @@ package com.devtiro.pets.controllers;
 
 import com.devtiro.pets.domain.dto.AdoptionApplicationCreateRequest;
 import com.devtiro.pets.domain.dto.AdoptionApplicationDto;
+import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateRequest;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.services.AdoptionApplicationService;
 import jakarta.validation.Valid;
@@ -9,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -26,9 +26,21 @@ public class AdoptionApplicationController {
     @PostMapping
     public ResponseEntity<AdoptionApplicationDto> createAdoptionApplication(
             @Valid @RequestBody AdoptionApplicationCreateRequest request,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal User applicant
     ) {
-        AdoptionApplicationDto application = adoptionApplicationService.createApplication(request, user);
+        AdoptionApplicationDto application = adoptionApplicationService.createApplication(request, applicant);
         return new ResponseEntity<>(application, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{applicationId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<AdoptionApplicationDto> updateApplication(
+            @PathVariable String applicationId,
+            @Valid @RequestBody AdoptionApplicationUpdateRequest request,
+            @AuthenticationPrincipal User applicant) {
+
+        AdoptionApplicationDto response = adoptionApplicationService.updateApplication(
+                applicationId, request, applicant);
+        return ResponseEntity.ok(response);
     }
 }

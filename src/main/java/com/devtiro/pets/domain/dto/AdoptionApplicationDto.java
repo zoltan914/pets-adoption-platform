@@ -51,6 +51,8 @@ public class AdoptionApplicationDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     private String createdBy;
+    private String updatedBy;
+
     private String reviewedBy;
 
 
