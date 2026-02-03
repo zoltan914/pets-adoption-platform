@@ -12,6 +12,8 @@ import com.devtiro.pets.repositories.UserRepository;
 import com.devtiro.pets.services.AdoptionApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -141,6 +143,12 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         }
 
         return adoptionApplicationMapper.toAdoptionApplicationDto(existingApplication);
+    }
+
+    @Override
+    public Page<AdoptionApplicationDto> getMyApplications(User applicant, Pageable pageable) {
+        return applicationRepository.findByApplicantId(applicant.getId(), pageable)
+                .map(adoptionApplicationMapper::toAdoptionApplicationDto);
     }
 
 

@@ -5,6 +5,8 @@ import com.devtiro.pets.domain.dto.AdoptionApplicationDto;
 import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateRequest;
 import com.devtiro.pets.domain.entity.AdoptionApplication;
 import com.devtiro.pets.domain.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface AdoptionApplicationService {
 
@@ -20,4 +22,5 @@ public interface AdoptionApplicationService {
 
     AdoptionApplicationDto getApplicationById(String applicationId, User userPrincipal);
 
+    Page<AdoptionApplicationDto> getMyApplications(User applicant, Pageable pageable);
 }

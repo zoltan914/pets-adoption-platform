@@ -1,6 +1,8 @@
 package com.devtiro.pets.repositories;
 
 import com.devtiro.pets.domain.entity.AdoptionApplication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,11 @@ public interface ApplicationRepository extends ElasticsearchRepository<AdoptionA
      * Check if a user has already submitted (non-draft) application for a pet
      */
     Optional<AdoptionApplication> findByPetIdAndApplicantId(String petId, String applicantId);
+
+    /**
+     * Find all applications by applicant ID
+     */
+    Page<AdoptionApplication> findByApplicantId(String applicantId, Pageable pageable);
+
 
 }
