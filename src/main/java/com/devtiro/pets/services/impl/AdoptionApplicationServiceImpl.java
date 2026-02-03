@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,16 +38,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
             throw new InvalidApplicationStatusException("This pet is not available for adoption");
         }
 
-        // Check if user already has a submitted (non-draft) application for this pet
-        boolean hasExistingApplication = applicationRepository
-                .findByPetIdAndApplicantId(
-                        request.getPetId(),
-                        applicant.getId()
-                ).isPresent();
-
-        if (hasExistingApplication) {
-            throw new DuplicateApplicationException("You have already submitted an application for this pet");
-        }
+        checkDuplicateApplication(pet.getId(), applicant.getId());
 
         AdoptionApplication application = adoptionApplicationMapper.toEntity(request);
         application.setPetId(pet.getId());
@@ -71,6 +63,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
 
         return adoptionApplicationMapper.toAdoptionApplicationDto(saved);
     }
+
 
     @Override
     public AdoptionApplicationDto updateApplication(String applicationId, AdoptionApplicationUpdateRequest request, User applicant) {
@@ -104,4 +97,47 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
 
         return adoptionApplicationMapper.toAdoptionApplicationDto(updated);
     }
+
+    @Override
+    public AdoptionApplicationDto submitApplication(String applicationId, User applicant) {
+        log.info("Submitting adoption application {} by user {}", applicationId, applicant.getUsername());
+
+        AdoptionApplication existingApplication = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException("Application not found: " + applicationId));
+
+        if (!existingApplication.getApplicantId().equals(applicant.getId())) {
+            throw new UnauthorizedException("You can only submit your own applications");
+        }
+
+        if (!existingApplication.getStatus().equals(AdoptionApplicationStatus.DRAFT)) {
+            throw new InvalidApplicationStatusException("Only draft applications can be submitted");
+        }
+
+        checkDuplicateApplication(existingApplication.getPetId(), existingApplication.getApplicantId());
+
+        existingApplication.setStatus(AdoptionApplicationStatus.SUBMITTED);
+        existingApplication.setSubmittedAt(LocalDateTime.now());
+
+        AdoptionApplication submitted = applicationRepository.save(existingApplication);
+        log.info("Submitted adoption application {}", submitted.getId());
+
+        // TODO send confirmation notification to applicant
+
+        return adoptionApplicationMapper.toAdoptionApplicationDto(submitted);
+    }
+
+
+    private void checkDuplicateApplication(String petId, String applicantId) {
+        // Check if user already has a submitted (non-draft) application for this pet
+        Optional<AdoptionApplication> optionalAdoptionApplication = applicationRepository
+                .findByPetIdAndApplicantId(
+                        petId,
+                        applicantId
+                );
+        if (optionalAdoptionApplication.isPresent()
+                && !optionalAdoptionApplication.get().getStatus().equals(AdoptionApplicationStatus.DRAFT)) {
+            throw new DuplicateApplicationException("You have already submitted an application for this pet");
+        }
+    }
+
 }

@@ -33,7 +33,6 @@ public class AdoptionApplicationController {
     }
 
     @PutMapping("/{applicationId}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AdoptionApplicationDto> updateApplication(
             @PathVariable String applicationId,
             @Valid @RequestBody AdoptionApplicationUpdateRequest request,

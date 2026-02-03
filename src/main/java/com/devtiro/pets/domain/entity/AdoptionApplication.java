@@ -36,19 +36,19 @@ public class AdoptionApplication extends Auditing {
 
     // Personal Contact Information
     @Field(type = FieldType.Text)
-    private String firstName; // TODO: get from auth info
+    private String firstName;
 
     @Field(type = FieldType.Text)
-    private String lastName; // TODO: get from auth info
+    private String lastName;
 
     @Field(type = FieldType.Keyword)
-    private String phoneNumber; // TODO: get from auth info
+    private String phoneNumber;
 
     @Field(type = FieldType.Keyword)
     private String alternatePhone;
 
     @Field(type = FieldType.Keyword)
-    private String email; // TODO: get from auth info
+    private String email;
 
     @Field(type = FieldType.Nested)
     private Address address;
