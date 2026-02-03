@@ -92,7 +92,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"User\",\n    \"lastName\": \"Arnold\",\n    \"phoneNumber\": \"302320120\",\n    \"username\": \"testuser\",\n    \"email\": \"user@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
+              "raw": "{\n    \"firstName\": \"Bob\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"302320120\",\n    \"username\": \"testuser\",\n    \"email\": \"user@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -162,7 +162,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"User\",\n    \"lastName\": \"James\",\n    \"phoneNumber\": \"35550120\",\n    \"username\": \"testuser2\",\n    \"email\": \"user2@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
+              "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"35550120\",\n    \"username\": \"testuser2\",\n    \"email\": \"user2@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -1180,7 +1180,8 @@
               "script": {
                 "exec": [
                   "var jsonData = pm.response.json();\r",
-                  "pm.environment.set(\"user_search_pet_id\", jsonData.content[0].id);"
+                  "pm.environment.set(\"bob_application_pet_id\", jsonData.content[0].id);\r",
+                  "pm.environment.set(\"jane_application_pet_id\", jsonData.content[1].id);"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1233,7 +1234,7 @@
           "response": []
         },
         {
-          "name": "Create Draft Application (USER)",
+          "name": "Create Draft Application (Bob - USER)",
           "event": [
             {
               "listen": "test",
@@ -1246,7 +1247,7 @@
                   "pm.test(\"Response has application ID\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData).to.have.property('id');",
-                  "    pm.collectionVariables.set(\"draft_application_id\", jsonData.id);",
+                  "    pm.collectionVariables.set(\"bob_draft_application_id\", jsonData.id);",
                   "});",
                   "",
                   "pm.test(\"Application status is DRAFT\", function () {",
@@ -1285,7 +1286,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"petId\": \"{{user_search_pet_id}}\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+0987654321\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"additionalComments\": \"i am applying for this pet.\",\n  \"isDraft\": true\n}"
+              "raw": "{\n  \"petId\": \"{{bob_application_pet_id}}\",\n  \"alternatePhone\": \"+0987654321\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"additionalComments\": \"i am applying for this pet.\",\n  \"isDraft\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/applications",
@@ -1301,21 +1302,37 @@
           "response": []
         },
         {
-          "name": "Test Duplicate Application (USER)",
+          "name": "Create Draft Application (Jane - USER)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 409\", function () {",
-                  "    pm.response.to.have.status(409);",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
                   "});",
                   "",
-                  "pm.test(\"Response error has code DUPLICATE_APPLICATION\", function () {",
+                  "pm.test(\"Response has application ID\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.code).to.eql('DUPLICATE_APPLICATION');",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.collectionVariables.set(\"jane_draft_application_id\", jsonData.id);",
                   "});",
-                  ""
+                  "",
+                  "pm.test(\"Application status is DRAFT\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('DRAFT');",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains all required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('petId');",
+                  "    pm.expect(jsonData).to.have.property('applicantId');",
+                  "    pm.expect(jsonData).to.have.property('firstName');",
+                  "    pm.expect(jsonData).to.have.property('lastName');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData).to.have.property('address');",
+                  "    pm.expect(jsonData).to.have.property('livingSituation');",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1328,7 +1345,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{userToken}}"
+                "value": "Bearer {{userToken2}}"
               },
               {
                 "key": "Content-Type",
@@ -1337,7 +1354,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"petId\": \"{{user_search_pet_id}}\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+0987654321\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"isDraft\": true\n}"
+              "raw": "{\n  \"petId\": \"{{jane_application_pet_id}}\",\n  \"alternatePhone\": \"+0987654321\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"additionalComments\": \"i am applying for this pet.\",\n  \"isDraft\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/applications",
@@ -1353,7 +1370,7 @@
           "response": []
         },
         {
-          "name": "Update Draft Application (USER)",
+          "name": "Update Draft Application (Bob - USER)",
           "event": [
             {
               "listen": "test",
@@ -1365,7 +1382,7 @@
                   "",
                   "pm.test(\"Application updated successfully\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.firstName).to.eql('User');",
+                  "    pm.expect(jsonData.firstName).to.eql('Bob');",
                   "    pm.expect(jsonData.status).to.eql('DRAFT');",
                   "});",
                   "",
@@ -1397,21 +1414,21 @@
               "raw": "{\n  \"alternatePhone\": \"0130123013\",\n  \"additionalComments\": \"Updated comments - very interested in this pet!\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/applications/{{draft_application_id}}",
+              "raw": "{{baseUrl}}/api/applications/{{bob_draft_application_id}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "applications",
-                "{{draft_application_id}}"
+                "{{bob_draft_application_id}}"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Submit Draft Application (USER)",
+          "name": "Submit Draft Application (Bob - USER)",
           "event": [
             {
               "listen": "test",
@@ -1424,6 +1441,7 @@
                   "pm.test(\"Application status is SUBMITTED\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData.status).to.eql('SUBMITTED');",
+                  "    pm.collectionVariables.set(\"bob_submitted_application_id\", jsonData.id);",
                   "});",
                   "",
                   "pm.test(\"Submitted timestamp is set\", function () {",
@@ -1446,15 +1464,200 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/applications/{{draft_application_id}}/submit",
+              "raw": "{{baseUrl}}/api/applications/{{bob_draft_application_id}}/submit",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "applications",
-                "{{draft_application_id}}",
+                "{{bob_draft_application_id}}",
                 "submit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Draft Application (Jane - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application status is SUBMITTED\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('SUBMITTED');",
+                  "    pm.collectionVariables.set(\"jane_submitted_application_id\", jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Submitted timestamp is set\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.submittedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken2}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{jane_draft_application_id}}/submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{jane_draft_application_id}}",
+                "submit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Application (Bob - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application details returned\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get('bob_submitted_application_id'));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{bob_submitted_application_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{bob_submitted_application_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Application (Jane - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application details returned\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get('jane_submitted_application_id'));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken2}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{jane_submitted_application_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{jane_submitted_application_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test Bob Cannot See Jane's application",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Unathorized request\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql('UNAUTHORIZED_ACCESS');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{jane_submitted_application_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{jane_submitted_application_id}}"
               ]
             }
           },
@@ -1499,6 +1702,22 @@
     },
     {
       "key": "before_delete_application_count",
+      "value": ""
+    },
+    {
+      "key": "bob_draft_application_id",
+      "value": ""
+    },
+    {
+      "key": "jane_draft_application_id",
+      "value": ""
+    },
+    {
+      "key": "bob_submitted_application_id",
+      "value": ""
+    },
+    {
+      "key": "jane_submitted_application_id",
       "value": ""
     }
   ]

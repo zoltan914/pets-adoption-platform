@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +28,7 @@ public class AdoptionApplicationController {
      * Users cannot submit multiple applications for the same pet
      */
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AdoptionApplicationDto> createAdoptionApplication(
             @Valid @RequestBody AdoptionApplicationCreateRequest request,
             @AuthenticationPrincipal User applicant
@@ -42,10 +42,12 @@ public class AdoptionApplicationController {
      * Only the applicant can update their own draft applications
      */
     @PutMapping("/{applicationId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AdoptionApplicationDto> updateApplication(
             @PathVariable String applicationId,
             @Valid @RequestBody AdoptionApplicationUpdateRequest request,
-            @AuthenticationPrincipal User applicant) {
+            @AuthenticationPrincipal User applicant
+    ) {
 
         AdoptionApplicationDto response = adoptionApplicationService.updateApplication(
                 applicationId, request, applicant);
@@ -57,12 +59,30 @@ public class AdoptionApplicationController {
      * Changes status from DRAFT to SUBMITTED
      */
     @PostMapping("/{applicationId}/submit")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AdoptionApplicationDto> submitApplication(
             @PathVariable String applicationId,
-            @AuthenticationPrincipal User applicant) {
-
+            @AuthenticationPrincipal User applicant
+    ) {
         AdoptionApplicationDto response = adoptionApplicationService.submitApplication(
                 applicationId, applicant);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Get a specific application by ID
+     * Users can only view their own applications
+     * Staff can view any application
+     */
+    @GetMapping("/{applicationId}")
+    @PreAuthorize("hasAnyRole('USER', 'STAFF')")
+    public ResponseEntity<AdoptionApplicationDto> getApplication(
+            @PathVariable String applicationId,
+            @AuthenticationPrincipal User userPrincipal
+    ) {
+        AdoptionApplicationDto response = adoptionApplicationService.getApplicationById(
+                applicationId, userPrincipal);
 
         return ResponseEntity.ok(response);
     }

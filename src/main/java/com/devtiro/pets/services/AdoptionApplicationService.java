@@ -18,4 +18,6 @@ public interface AdoptionApplicationService {
 
     AdoptionApplicationDto submitApplication(String applicationId, User applicant);
 
+    AdoptionApplicationDto getApplicationById(String applicationId, User userPrincipal);
+
 }

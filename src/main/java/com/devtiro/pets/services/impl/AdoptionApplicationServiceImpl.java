@@ -86,7 +86,9 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         }
 
         if (!application.getAdditionalComments().isEmpty()) {
-            String additionalCommentsAppended = application.getAdditionalComments().concat("\n").concat(request.getAdditionalComments());
+            String additionalCommentsAppended = application.getAdditionalComments()
+                    .concat("\n")
+                    .concat(request.getAdditionalComments());
             request.setAdditionalComments(additionalCommentsAppended);
         }
 
@@ -125,6 +127,22 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
 
         return adoptionApplicationMapper.toAdoptionApplicationDto(submitted);
     }
+
+    @Override
+    public AdoptionApplicationDto getApplicationById(String applicationId, User userPrincipal) {
+        log.info("Getting adoption application {} for user {}", applicationId, userPrincipal.getUsername());
+
+        AdoptionApplication existingApplication = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException("Application not found: " + applicationId));
+
+        // Users can only view their own applications, staff can view all
+        if (!existingApplication.getApplicantId().equals(userPrincipal.getId()) && !userPrincipal.getRole().equals(Role.STAFF)) {
+            throw new UnauthorizedException("You can only view your own applications");
+        }
+
+        return adoptionApplicationMapper.toAdoptionApplicationDto(existingApplication);
+    }
+
 
     // TODO create validatorservice for this and pet
     private void checkDuplicateApplication(String petId, String applicantId) {
