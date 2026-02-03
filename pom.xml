@@ -30,7 +30,7 @@
         <java.version>25</java.version>
         <lombok.version>1.18.42</lombok.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <elasticsearch-java.version>9.2.3</elasticsearch-java.version>
+        <elasticsearch-java.version>9.2.4</elasticsearch-java.version>
         <json.webtoken.version>0.13.0</json.webtoken.version>
     </properties>
     <dependencies>

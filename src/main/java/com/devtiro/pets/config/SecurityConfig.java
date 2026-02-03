@@ -64,6 +64,8 @@ public class SecurityConfig {
 
                         // STAFF only endpoints - Medical Records (all operations)
                         .requestMatchers("/api/medical-records/**").hasRole("STAFF")
+                        // TODO FOR NOW DISABLE ROLE AUTH
+                        .requestMatchers("/api/applications/**").permitAll()
 
                         // All other requests must be authenticated
                         .anyRequest().authenticated()

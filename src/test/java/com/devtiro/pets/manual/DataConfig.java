@@ -3,10 +3,7 @@ package com.devtiro.pets.manual;
 import com.devtiro.pets.domain.dto.security.AuthResponse;
 import com.devtiro.pets.domain.dto.security.RegisterRequest;
 import com.devtiro.pets.domain.entity.*;
-import com.devtiro.pets.repositories.MedicalRecordRepository;
-import com.devtiro.pets.repositories.PetRepository;
-import com.devtiro.pets.repositories.PhotoRepository;
-import com.devtiro.pets.repositories.UserRepository;
+import com.devtiro.pets.repositories.*;
 import com.devtiro.pets.services.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -40,7 +37,8 @@ public class DataConfig {
     private MedicalRecordRepository medicalRecordRepository;
     @Autowired
     private AuthService authService;
-    // private final AdoptionApplicationRepository adoptionApplicationRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Test
     @Rollback(false)
@@ -52,7 +50,7 @@ public class DataConfig {
         userRepository.deleteAll();
         photoRepository.deleteAll();
         medicalRecordRepository.deleteAll();
-        // adoptionApplicationRepository.deleteAll();
+        applicationRepository.deleteAll();
 
         log.info("Cleared existing data");
 

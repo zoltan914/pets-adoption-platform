@@ -561,6 +561,41 @@
       "name": "Pets - Staff Role",
       "item": [
         {
+          "name": "Get All Pets (AGENT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets"
+              ],
+              "query": [
+                {
+                  "key": "size",
+                  "value": "30",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Create Pet",
           "event": [
             {
@@ -1127,6 +1162,191 @@
               "path": [
                 "api",
                 "pets"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Adoption Applications",
+      "item": [
+        {
+          "name": "Search Pet For An Application (USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"user_search_pet_id\", jsonData.content[0].id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pets/search?size=15&sort=age,asc&sort=createdAt,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pets",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "size",
+                  "value": "15"
+                },
+                {
+                  "key": "sort",
+                  "value": "age,asc"
+                },
+                {
+                  "key": "sort",
+                  "value": "createdAt,asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Draft Application (USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has application ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.collectionVariables.set(\"draft_application_id\", jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Application status is DRAFT\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('DRAFT');",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains all required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('petId');",
+                  "    pm.expect(jsonData).to.have.property('applicantId');",
+                  "    pm.expect(jsonData).to.have.property('firstName');",
+                  "    pm.expect(jsonData).to.have.property('lastName');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData).to.have.property('address');",
+                  "    pm.expect(jsonData).to.have.property('livingSituation');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"petId\": \"{{user_search_pet_id}}\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+0987654321\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"isDraft\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test Duplicate Application (USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "",
+                  "pm.test(\"Response error has code DUPLICATE_APPLICATION\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql('DUPLICATE_APPLICATION');",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"petId\": \"{{user_search_pet_id}}\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+0987654321\",\n  \"email\": \"john.doe@example.com\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zipCode\": \"62701\"\n  },\n  \"livingSituation\": {\n    \"residenceType\": \"HOUSE\",\n    \"ownOrRent\": true,\n    \"hasYard\": true,\n    \"yardSize\": \"LARGE\",\n    \"isYardFenced\": true,\n    \"numberOfAdults\": 2,\n    \"numberOfChildren\": 1,\n    \"childrenAges\": \"8\",\n    \"hasOtherPets\": false,\n    \"activityLevel\": \"MODERATE\",\n    \"hoursAlonePerDay\": 4\n  },\n  \"adoptionReason\": \"Looking for a family companion\",\n  \"petExperience\": \"Had dogs for 10 years\",\n  \"veterinarianName\": \"Dr. Smith\",\n  \"veterinarianContact\": \"vet@clinic.com\",\n  \"references\": \"Jane Doe - neighbor\",\n  \"isDraft\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications"
               ]
             }
           },

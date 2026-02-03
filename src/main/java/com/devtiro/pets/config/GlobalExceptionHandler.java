@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,6 +189,32 @@ public class GlobalExceptionHandler {
                 .path(servletRequest.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(InvalidApplicationStatusException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidApplicationStatusException(InvalidApplicationStatusException ex, HttpServletRequest servletRequest) {
+        log.warn("Invalid application status: {}", ex.getMessage());
+        ErrorResponse error = ErrorResponse.builder()
+                .code("INVALID_APPLICATION_STATUS")
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("INVALID")
+                .path(servletRequest.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(DuplicateApplicationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateApplicationException(DuplicateApplicationException ex, HttpServletRequest servletRequest) {
+        log.error("Duplicate application: {}", ex.getMessage());
+        ErrorResponse error = ErrorResponse.builder()
+                .code("DUPLICATE_APPLICATION")
+                .message(ex.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .error("Duplicate Application")
+                .path(servletRequest.getRequestURI())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
