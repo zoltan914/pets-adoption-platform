@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/photos/{petId}").hasAnyRole("STAFF", "USER")
                         // STAFF only endpoints - Photo Management (POST)
                         .requestMatchers(HttpMethod.POST, "/api/photos/{petId}").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.DELETE, "/api/photos/{petId}").hasRole("STAFF")
 
                         // STAFF only endpoints - Pet Management (POST, PUT, PATCH, DELETE)
                         .requestMatchers(HttpMethod.POST, "/api/pets").hasRole("STAFF")

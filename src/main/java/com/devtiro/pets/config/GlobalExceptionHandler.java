@@ -178,6 +178,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(PhotoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePhotoNotFoundException(PhotoNotFoundException ex, HttpServletRequest servletRequest) {
+        log.warn("Photo not found: {}", ex.getMessage());
+        ErrorResponse error = ErrorResponse.builder()
+                .code("PHOTO_NOT_FOUND")
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("NOT_FOUND")
+                .path(servletRequest.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(ApplicationNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleApplicationNotFoundException(ApplicationNotFoundException ex, HttpServletRequest servletRequest) {
         log.warn("Application not found: {}", ex.getMessage());

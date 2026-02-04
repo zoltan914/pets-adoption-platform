@@ -12,4 +12,6 @@ public interface PhotoService {
 
     List<PhotoDto> uploadPhotos(String petId, List<PhotoUploadRequest> requests);
 
+    void deletePhotoById(String photoId);
+
 }

@@ -36,4 +36,13 @@ public class PhotoController {
         return photoService.uploadPhotos(petId, requests);
     }
 
+    @PreAuthorize("hasRole('STAFF')")
+    @DeleteMapping("/{petId}")
+    public void deletePhotoById(
+            @PathVariable String petId
+    ) {
+        photoService.deletePhotoById(petId);
+    }
+
+
 }

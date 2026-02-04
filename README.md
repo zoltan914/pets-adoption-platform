@@ -99,6 +99,7 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - `GET /api/pets/search` - Advanced search with filters
 - `POST /api/photos/{petId}` - Upload photos (Staff)
 - `GET /api/photos/{petId}` - Get pet photos
+- `DELETE /api/photos/{photoId}` - Delete Photo By ID (Staff)
 - `GET /api/medical-records/{petId}` - Get all medical records for a pet (Staff)
 - `POST /api/medical-records/{petId}` - Add medical record (Staff)
 - `PUT /api/medical-records/{medicalRecordId}` - Update medical record (Staff)
@@ -314,6 +315,7 @@ The project includes a Postman collection for API testing: `Pet Adoption Platfor
 #### Photos
 - `POST /api/photos/{petId}` - Upload photos (Staff)
 - `GET /api/photos/{petId}` - Get pet photos
+- `DELETE /api/photos/{photoId}` - Delete Photo By ID (Staff)
 
 #### Medical Records
 - `GET /api/medical-records/{petId}` - Get All medical records for a pet (Staff)

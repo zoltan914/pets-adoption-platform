@@ -692,6 +692,8 @@
               "listen": "test",
               "script": {
                 "exec": [
+                  "var jsonData = pm.response.json()\r",
+                  "pm.collectionVariables.set(\"photo_to_be_deleted\", jsonData[0].id);\r",
                   ""
                 ],
                 "type": "text/javascript",
@@ -731,13 +733,42 @@
           "response": []
         },
         {
+          "name": "Delete Photo",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/{{photo_to_be_deleted}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "photos",
+                "{{photo_to_be_deleted}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get All Uploaded Photos For Pet",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  ""
+                  "\r",
+                  "pm.test(\"Photos for pet have size 1\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    console.log(jsonData.length)\r",
+                  "    pm.expect(jsonData.length).to.be.eql(1);\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -2002,6 +2033,10 @@
     },
     {
       "key": "jane_submitted_application_id",
+      "value": ""
+    },
+    {
+      "key": "photo_to_be_deleted",
       "value": ""
     }
   ]
