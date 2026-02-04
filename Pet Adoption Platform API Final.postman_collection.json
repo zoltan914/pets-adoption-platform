@@ -1866,7 +1866,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/applications/pet/{{staff_created_pet_id}}?page=0&size=10",
+              "raw": "{{baseUrl}}/api/applications/pet/{{bob_application_pet_id}}?page=0&size=10",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1874,7 +1874,7 @@
                 "api",
                 "applications",
                 "pet",
-                "{{staff_created_pet_id}}"
+                "{{bob_application_pet_id}}"
               ],
               "query": [
                 {

@@ -10,13 +10,11 @@ import org.mapstruct.*;
 public interface AdoptionApplicationMapper {
 
 
-    AdoptionApplication toEntity(AdoptionApplicationCreateRequest request);
+    AdoptionApplication toEntity(AdoptionApplicationCreateRequest createRequest);
 
-    @Mapping(target = "petName", source = "application.pet.name")
-    @Mapping(target = "applicantUsername", source = "application.applicant.username")
     AdoptionApplicationDto toAdoptionApplicationDto(AdoptionApplication application);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateEntity(@MappingTarget AdoptionApplication application, AdoptionApplicationUpdateRequest request);
+    void updateEntity(@MappingTarget AdoptionApplication application, AdoptionApplicationUpdateRequest updateRequest);
 
 }

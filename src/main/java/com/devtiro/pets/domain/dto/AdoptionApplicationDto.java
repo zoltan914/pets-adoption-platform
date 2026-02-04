@@ -19,8 +19,7 @@ public class AdoptionApplicationDto {
     private String petId;
     private String petName;
     private String applicantId;
-    private String applicantUsername;
-    
+
     // Personal Contact Information
     private String firstName;
     private String lastName;

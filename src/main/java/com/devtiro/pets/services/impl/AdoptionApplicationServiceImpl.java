@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,9 +44,8 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
 
         AdoptionApplication application = adoptionApplicationMapper.toEntity(request);
         application.setPetId(pet.getId());
-        application.setPet(pet);
         application.setApplicantId(applicant.getId());
-        application.setApplicant(applicant);
+        application.setPetName(pet.getName());
         application.setFirstName(applicant.getFirstName());
         application.setLastName(applicant.getLastName());
         application.setEmail(applicant.getEmail());
