@@ -69,19 +69,19 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 
 ### Current Implementation
 
-| Feature Category              | Status | Details                                           |
-|-------------------------------|--------|---------------------------------------------------|
+| Feature Category              | Status | Details                                          |
+|-------------------------------|--------|--------------------------------------------------|
 | **Pet Browsing & Search**     | ✅ Complete | Full search with filters, pagination, geolocation |
-| **Pet Management**            | ✅ Complete | CRUD operations for pets (Staff only)             |
-| **Photo Management**          | ✅ Complete | Upload, view, delete multiple photos per pet      |
-| **Medical Records**           | ✅ Complete | Track vaccinations, health checks, procedures     |
-| **User Authentication**       | ✅ Complete | JWT-based auth with roles (USER, STAFF)           |
-| **Search Implementations**    | ✅ Complete | Two approaches: Criteria Query & Native Client    |
-| **Data Seeding**              | ✅ Complete | Test utility with 45+ sample pets                 |
-| **Adoption Applications**     | ✅ Complete | Managing applications for pets                    |
-| **Notifications**             | 🟡 Not Implemented | Planned (TODO state)                              |
-| **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
-| **Favorites/Wishlist**        | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
+| **Pet Management**            | ✅ Complete | CRUD operations for pets (Staff only)            |
+| **Photo Management**          | ✅ Complete | Upload, view, delete multiple photos per pet     |
+| **Medical Records**           | ✅ Complete | Track vaccinations, health checks, procedures    |
+| **User Authentication**       | ✅ Complete | JWT-based auth with roles (USER, STAFF)          |
+| **Search Implementations**    | ✅ Complete | Two approaches: Criteria Query & Native Client   |
+| **Data Seeding**              | ✅ Complete | Test utility with 45+ sample pets                |
+| **Adoption Applications**     | ✅ Complete | Managing applications for pets                   |
+| **Notifications**             | ✅ Complete | Send confirmation notification                   |
+| **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not yet planned (Nice to have)                   |
+| **Favorites/Wishlist**        | 🔴 Not Implemented | Not yet planned (Nice to have)                   |
 
 
 
@@ -253,33 +253,71 @@ For detailed information about the data seeding utility, see the [DataConfig Sum
 
 ### Application Properties
 
+The variables and sensitive data (email addresses) are loaded from the `application-local.properties` file.
+Create this file in the project root folder:
+
+```properties
+ELASTICSEARCH_URL=http://localhost:9200
+ELASTICSEARCH_USERNAME=
+ELASTICSEARCH_PASSWORD=
+
+# Email Configuration (For STAFF, set with app.staff.email parameter in the application.yml)
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=<your-smtp-email-address>
+MAIL_PASSWORD=<your 16 character code>
+
+# JWT Configuration
+JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+
+# Application Configuration
+SERVER_PORT=8080
+
+# (For USER, set with app.user.email parameter in the application.yml)
+BOB_EMAIL=<your-second-email-address-for-first-adopter>
+JANE_EMAIL=<your-third-email-address-for-second-adopter>
+```
+
 The application is configured via `src/main/resources/application.yaml`. Key configurations include:
 
 ```yaml
 spring:
+  application:
+    name: pets-adoption-platform
   elasticsearch:
     uris: ${ELASTICSEARCH_URL:http://localhost:9200}
     username: ${ELASTICSEARCH_USERNAME:}
     password: ${ELASTICSEARCH_PASSWORD:}
-
+  config:
+    import: optional:file:./application-local.properties
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    verify:
+      host: http://localhost:8080
+    properties:
+      mail:
+        smtp:
+          writetimeout: 10000
+          connectiontimeout: 10000
+          auth: true
+          starttls:
+            enable: true
 jwt:
-  secret: ${JWT_SECRET:your-secret-key}
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}  # Must be set via environment variable
   access-token-expiration: ${JWT_ACCESS_EXPIRATION:3600000}  # 1 hour
   refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7 days
+
+app:
+  staff:
+    email: ${MAIL_USERNAME:staff@pets.com}
+  bob:
+    email: ${BOB_EMAIL:bob@email.com}
+  jane:
+    email: ${JANE_EMAIL:jane@email.com}
 ```
-
-### Environment Variables
-
-You can override default configurations using environment variables:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ELASTICSEARCH_URL` | Elasticsearch connection URL | `http://localhost:9200` |
-| `ELASTICSEARCH_USERNAME` | Elasticsearch username (if auth enabled) | - |
-| `ELASTICSEARCH_PASSWORD` | Elasticsearch password (if auth enabled) | - |
-| `JWT_SECRET` | Secret key for JWT token generation | Default provided |
-| `JWT_ACCESS_EXPIRATION` | Access token expiration time (ms) | `3600000` (1 hour) |
-| `JWT_REFRESH_EXPIRATION` | Refresh token expiration time (ms) | `604800000` (7 days) |
 
 ### Production Configuration
 
@@ -298,12 +336,20 @@ For production deployments:
 
 The project includes a Postman collection for API testing: `Pet Adoption Platform API Final.postman_collection.json`
 
+
 ### Import Postman Collection
 
 1. Open Postman
 2. Click **Import**
 3. Select the `Pet Adoption Platform API Final.postman_collection.json` file
 4. The collection will be imported with all available endpoints
+5. Create an environment (e.g. `Pet Adoption Platform`)
+6. Create the following environment variables:
+    - `staff_email` (put your smtp host email here)
+    - `bob_email` (additional email address)
+    - `jane_email` (additional email address)
+
+All your variables will be created and used from this environment
 
 ### Main API Endpoints
 
@@ -609,7 +655,7 @@ pets-adoption-platform/
 - ✅ Users must provide personal contact information
 - ✅ Users must provide living situation details
 - ✅ Users can save applications as drafts
-- 🟡 Users receive confirmation when application is submitted (Todo state)
+- ✅ Users receive confirmation when application is submitted (Todo state)
 - ✅ Users can track application status in their account
 - ✅ Users can't submit multiple applications for the same pet
 

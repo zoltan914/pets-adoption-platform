@@ -22,7 +22,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"Staff\",\n    \"lastName\": \"Kevin\",\n    \"phoneNumber\": \"30130120\",\n    \"username\": \"staffuser\",\n    \"email\": \"staff@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"STAFF\"\n}"
+              "raw": "{\n    \"firstName\": \"Staff\",\n    \"lastName\": \"Kevin\",\n    \"phoneNumber\": \"30130120\",\n    \"username\": \"staffuser\",\n    \"email\": \"{{staff_email}}\",\n    \"password\": \"password123\",\n    \"role\": \"STAFF\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -64,7 +64,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"staff@test.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"{{staff_email}}\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -92,7 +92,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"Bob\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"302320120\",\n    \"username\": \"testuser\",\n    \"email\": \"user@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
+              "raw": "{\n    \"firstName\": \"Bob\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"302320120\",\n    \"username\": \"testuser\",\n    \"email\": \"{{bob_email}}\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -134,7 +134,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@test.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"{{bob_email}}\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -162,7 +162,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"35550120\",\n    \"username\": \"testuser2\",\n    \"email\": \"user2@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
+              "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"35550120\",\n    \"username\": \"testuser2\",\n    \"email\": \"{{jane_email}}\",\n    \"password\": \"password123\",\n    \"role\": \"USER\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -204,7 +204,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user2@test.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"{{jane_email}}\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",

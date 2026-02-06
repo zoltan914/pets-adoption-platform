@@ -95,7 +95,7 @@ public class PetServiceImpl implements PetService {
 
         petRepository.delete(existingPet);
 
-        log.info("Pet deleted with id: {}", existingPet.getId());
+        log.info("Pet deleted with id: {}", petId);
     }
 
     @Override

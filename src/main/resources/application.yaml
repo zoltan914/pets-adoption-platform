@@ -5,16 +5,32 @@ spring:
     uris: ${ELASTICSEARCH_URL:http://localhost:9200}
     username: ${ELASTICSEARCH_USERNAME:}
     password: ${ELASTICSEARCH_PASSWORD:}
-
+  config:
+    import: optional:file:./application-local.properties
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    verify:
+      host: http://localhost:8080
+    properties:
+      mail:
+        smtp:
+          writetimeout: 10000
+          connectiontimeout: 10000
+          auth: true
+          starttls:
+            enable: true
 jwt:
   secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}  # Must be set via environment variable
   access-token-expiration: ${JWT_ACCESS_EXPIRATION:3600000}  # 1 hour
   refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7 days
 
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          elasticsearch:
-            LOGGER: TRACE
+app:
+  staff:
+    email: ${MAIL_USERNAME:staff@pets.com}
+  bob:
+    email: ${BOB_EMAIL:bob@email.com}
+  jane:
+    email: ${JANE_EMAIL:jane@email.com}

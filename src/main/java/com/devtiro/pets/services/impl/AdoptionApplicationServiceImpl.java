@@ -10,6 +10,7 @@ import com.devtiro.pets.mappers.AdoptionApplicationMapper;
 import com.devtiro.pets.repositories.ApplicationRepository;
 import com.devtiro.pets.repositories.PetRepository;
 import com.devtiro.pets.services.AdoptionApplicationService;
+import com.devtiro.pets.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
     private final PetRepository petRepository;
     private final AdoptionApplicationMapper adoptionApplicationMapper;
     private final ApplicationRepository applicationRepository;
+    private final NotificationService notificationService;
 
     @Override
     public AdoptionApplicationDto createApplication(AdoptionApplicationCreateRequest request, User applicant) {
@@ -118,7 +120,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         AdoptionApplication submitted = applicationRepository.save(existingApplication);
         log.info("Submitted adoption application {}", submitted.getId());
 
-        // TODO send confirmation notification to applicant
+        notificationService.sendSubmitConfirmation(applicant.getEmail(), submitted);
 
         return adoptionApplicationMapper.toAdoptionApplicationDto(submitted);
     }
@@ -241,7 +243,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         log.info("Deleted application {}", applicationId);
     }
 
-    // TODO create validatorservice for this and pet
+    // TODO create ValidatorService component for AdoptionApplicationService and PetService
     private void checkDuplicateApplication(String petId, String applicantId) {
         // Check if user already has a submitted (non-draft) application for this pet
         Optional<AdoptionApplication> optionalAdoptionApplication = applicationRepository
