@@ -3,7 +3,7 @@ version: '3.8'
 services:
   elasticsearch:
     image: elasticsearch:9.2.3
-    container_name: realestate-platform-elasticsearch
+    container_name: pets-adoption-platform-elasticsearch
     environment:
       - node.name=elasticsearch
       - cluster.name=es-docker-cluster
@@ -14,12 +14,12 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - elasticsearch-data-realestate:/usr/share/elasticsearch/data
+      - elasticsearch-data-pets:/usr/share/elasticsearch/data
     networks:
       - pet-adoption-network
 
 volumes:
-  elasticsearch-data-realestate:
+  elasticsearch-data-pets:
     driver: local
 
 networks:
