@@ -78,7 +78,7 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 | **User Authentication** | ✅ Complete | JWT-based auth with roles (USER, STAFF)           |
 | **Search Implementations** | ✅ Complete | Two approaches: Criteria Query & Native Client    |
 | **Data Seeding** | ✅ Complete | Test utility with 45+ sample pets                 |
-| **Adoption Applications** | 🟡 Not Implemented | Planned for future release (ongoing)              |
+| **Adoption Applications** | ✅ Complete | Managing applications for pets                    |
 | **Meet-and-Greet Scheduling** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
 | **Favorites/Wishlist** | 🔴 Not Implemented | Not yet planned (Nice to have)                    |
 
@@ -103,12 +103,20 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - `GET /api/medical-records/{petId}` - Get all medical records for a pet (Staff)
 - `POST /api/medical-records/{petId}` - Add medical record (Staff)
 - `PUT /api/medical-records/{medicalRecordId}` - Update medical record (Staff)
+- `POST /api/applications` - Create application
+- `PUT /api/applications/{applicationId}` - Update a draft application
+- `POST /api/applications/{applicationId}/submit` - Submit a draft application
+- `POST /api/applications/{applicationId}/withdraw` - Withdraw a submitted application
+- `DELETE /api/applications/{applicationId}` - Delete a draft application
+- `GET /api/applications/{applicationId}` - Get a specific application by ID
+- `GET /api/applications/my-applications` - Get user's applications
+- `GET /api/applications/pet/{petId}` - Get all applications for a specific pet (Staff)
+- `GET /api/applications/status/{status}` -  Get all applications by status (Staff)
+- `GET /api/applications` - Get all applications (Staff)
+- `PATCH /api/applications/{applicationId}/status` - Update application status (Staff)
+
 
 **🔴 Not Available (Planned):**
-- `POST /api/applications` - Submit adoption application
-- `GET /api/applications` - Get user's applications
-- `GET /api/applications/{id}` - Get application details
-- `PUT /api/applications/{id}` - Update application
 - `POST /api/favorites` - Add pet to favorites
 - `GET /api/favorites` - Get user's favorite pets
 - `DELETE /api/favorites/{petId}` - Remove from favorites
@@ -321,6 +329,19 @@ The project includes a Postman collection for API testing: `Pet Adoption Platfor
 - `GET /api/medical-records/{petId}` - Get All medical records for a pet (Staff)
 - `POST /api/medical-records/{petId}` - Add medical record (Staff)
 - `PUT /api/medical-records/{medicalRecordId}` - Update medical record (Staff)
+- 
+#### Applications
+- `POST /api/applications` - Create application
+- `PUT /api/applications/{applicationId}` - Update a draft application
+- `POST /api/applications/{applicationId}/submit` - Submit a draft application
+- `POST /api/applications/{applicationId}/withdraw` - Withdraw a submitted application
+- `DELETE /api/applications/{applicationId}` - Delete a draft application
+- `GET /api/applications/{applicationId}` - Get a specific application by ID
+- `GET /api/applications/my-applications` - Get user's applications
+- `GET /api/applications/pet/{petId}` - Get all applications for a specific pet (Staff)
+- `GET /api/applications/status/{status}` -  Get all applications by status (Staff)
+- `GET /api/applications` - Get all applications (Staff)
+- `PATCH /api/applications/{applicationId}/status` - Update application status (Staff)
 
 ## 🔍 Search Implementations
 
@@ -581,16 +602,15 @@ pets-adoption-platform/
 **I want to** submit an adoption application for a specific pet  
 **So that** I can begin the process of adopting them
 
-**Status:** 🔴 **Not Yet Implemented**
 
 **Acceptance Criteria:**
-- ❌ Users can fill out an adoption application form
-- ❌ Users must provide personal contact information
-- ❌ Users must provide living situation details
-- ❌ Users can save applications as drafts
-- ❌ Users receive confirmation when application is submitted
-- ❌ Users can track application status in their account
-- ❌ Users can't submit multiple applications for the same pet
+- ✅ Users can fill out an adoption application form
+- ✅ Users must provide personal contact information
+- ✅ Users must provide living situation details
+- ✅ Users can save applications as drafts
+- ✅ Users receive confirmation when application is submitted
+- ✅ Users can track application status in their account
+- ✅ Users can't submit multiple applications for the same pet
 
 
 ## 🔐 Security

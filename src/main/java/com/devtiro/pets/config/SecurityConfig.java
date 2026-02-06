@@ -65,8 +65,19 @@ public class SecurityConfig {
 
                         // STAFF only endpoints - Medical Records (all operations)
                         .requestMatchers("/api/medical-records/**").hasRole("STAFF")
-                        // TODO FOR NOW DISABLE ROLE AUTH
-                        .requestMatchers("/api/applications/**").permitAll()
+
+                        // Applications endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/applications").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/applications/{applicationId}").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/applications/{applicationId}/submit").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/applications/{applicationId}/withdraw").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/applications/{applicationId}").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/applications/{applicationId}").hasAnyRole("USER","STAFF")
+                        .requestMatchers(HttpMethod.GET, "/api/applications/my-applications").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/applications/pet/{petId}").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.GET, "/api/applications/status/{status}").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.GET, "/api/applications").hasRole("STAFF")
+                        .requestMatchers(HttpMethod.PATCH, "/api/applications/{applicationId}/status").hasRole("STAFF")
 
                         // All other requests must be authenticated
                         .anyRequest().authenticated()

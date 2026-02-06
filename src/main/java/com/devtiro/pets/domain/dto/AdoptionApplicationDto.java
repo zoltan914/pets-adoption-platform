@@ -52,7 +52,4 @@ public class AdoptionApplicationDto {
     private String createdBy;
     private String updatedBy;
 
-    private String reviewedBy;
-
-
 }

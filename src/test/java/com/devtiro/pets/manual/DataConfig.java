@@ -46,9 +46,9 @@ public class DataConfig {
         log.info("=== Loading sample data ===");
 
         // Clear existing data
-        petRepository.deleteAll();
         userRepository.deleteAll();
         photoRepository.deleteAll();
+        petRepository.deleteAll();
         medicalRecordRepository.deleteAll();
         applicationRepository.deleteAll();
 

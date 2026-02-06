@@ -3,6 +3,7 @@ package com.devtiro.pets.controllers;
 import com.devtiro.pets.domain.dto.AdoptionApplicationCreateRequest;
 import com.devtiro.pets.domain.dto.AdoptionApplicationDto;
 import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateRequest;
+import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateStatusRequest;
 import com.devtiro.pets.domain.entity.AdoptionApplicationStatus;
 import com.devtiro.pets.domain.entity.User;
 import com.devtiro.pets.services.AdoptionApplicationService;
@@ -78,6 +79,37 @@ public class AdoptionApplicationController {
     }
 
     /**
+     * Withdraw a submitted application
+     * Users can withdraw their own applications
+     */
+    @PostMapping("/{applicationId}/withdraw")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<AdoptionApplicationDto> withdrawApplication(
+            @PathVariable String applicationId,
+            @AuthenticationPrincipal User applicant) {
+
+        AdoptionApplicationDto response = adoptionApplicationService.withdrawApplication(
+                applicationId, applicant);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Delete a draft application
+     * Only draft applications can be deleted
+     */
+    @DeleteMapping("/{applicationId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteApplication(
+            @PathVariable String applicationId,
+            @AuthenticationPrincipal User applicant
+    ) {
+        adoptionApplicationService.deleteApplication(applicationId, applicant);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Get a specific application by ID
      * Users can only view their own applications
      * Staff can view any application
@@ -94,6 +126,9 @@ public class AdoptionApplicationController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Get user's applications
+     */
     @GetMapping("/my-applications")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Page<AdoptionApplicationDto>> getMyApplications(
@@ -162,6 +197,23 @@ public class AdoptionApplicationController {
                     direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<AdoptionApplicationDto> response = adoptionApplicationService.getAllApplications(pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Update application status (STAFF only)
+     * Staff can approve, reject, or change status of applications
+     */
+    @PatchMapping("/{applicationId}/status")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<AdoptionApplicationDto> updateApplicationStatus(
+            @PathVariable String applicationId,
+            @Valid @RequestBody AdoptionApplicationUpdateStatusRequest request,
+            @AuthenticationPrincipal User staff) {
+
+        AdoptionApplicationDto response = adoptionApplicationService.updateApplicationStatus(
+                applicationId, request, staff);
 
         return ResponseEntity.ok(response);
     }

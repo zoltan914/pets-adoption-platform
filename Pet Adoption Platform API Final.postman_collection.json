@@ -693,7 +693,8 @@
               "script": {
                 "exec": [
                   "var jsonData = pm.response.json()\r",
-                  "pm.collectionVariables.set(\"photo_to_be_deleted\", jsonData[0].id);\r",
+                  "pm.environment.set(\"photo_to_be_deleted\", jsonData[0].id);\r",
+                  "pm.environment.set(\"num_of_uploaded_photos\", jsonData.length)\r",
                   ""
                 ],
                 "type": "text/javascript",
@@ -766,8 +767,7 @@
                   "\r",
                   "pm.test(\"Photos for pet have size 1\", function () {\r",
                   "    var jsonData = pm.response.json();\r",
-                  "    console.log(jsonData.length)\r",
-                  "    pm.expect(jsonData.length).to.be.eql(1);\r",
+                  "    pm.expect(jsonData.length).to.be.eql(pm.environment.get('num_of_uploaded_photos') - 1);\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -1166,7 +1166,7 @@
                   "let deletedId = pm.environment.get(\"staff_created_pet_id_to_be_deleted\");\r",
                   "\r",
                   "pm.test(\"Pet is not found in the list\", function () {\r",
-                  "    let deletedPet = jsonData.find(pet => pet.id === deletedId);\r",
+                  "    let deletedPet = jsonData.content.find(pet => pet.id === deletedId);\r",
                   "\r",
                   "    pm.expect(deletedPet).to.be.undefined;\r",
                   "});"
@@ -1211,7 +1211,7 @@
               "script": {
                 "exec": [
                   "var jsonData = pm.response.json();\r",
-                  "pm.environment.set(\"staff_created_pet_id\", jsonData.id);"
+                  "pm.collectionVariables.set(\"staff_created_pet_id\", jsonData.id);"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1323,7 +1323,7 @@
                   "pm.test(\"Response has application ID\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData).to.have.property('id');",
-                  "    pm.collectionVariables.set(\"bob_draft_application_id\", jsonData.id);",
+                  "    pm.environment.set(\"bob_draft_application_id\", jsonData.id);",
                   "});",
                   "",
                   "pm.test(\"Application status is DRAFT\", function () {",
@@ -1391,7 +1391,7 @@
                   "pm.test(\"Response has application ID\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData).to.have.property('id');",
-                  "    pm.collectionVariables.set(\"jane_draft_application_id\", jsonData.id);",
+                  "    pm.environment.set(\"jane_draft_application_id\", jsonData.id);",
                   "});",
                   "",
                   "pm.test(\"Application status is DRAFT\", function () {",
@@ -1876,7 +1876,7 @@
                   "",
                   "pm.test(\"All applications are for the same pet\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    var petId = pm.environment.get('staff_created_pet_id');",
+                  "    var petId = pm.environment.get('bob_application_pet_id');",
                   "    jsonData.content.forEach(function(app) {",
                   "        pm.expect(app.petId).to.eql(petId);",
                   "    });",
@@ -1977,6 +1977,427 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Update Application Status - Approve Bob's application (STAFF)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application status updated to APPROVED\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('APPROVED');",
+                  "});",
+                  "",
+                  "pm.test(\"Staff notes and reviewer added\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.staffNotes).to.not.be.null;",
+                  "    pm.expect(jsonData.updatedBy).to.not.be.null;",
+                  "    pm.expect(jsonData.updatedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"staffNotes\": \"Great application! Applicant has excellent experience and suitable living conditions.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{bob_submitted_application_id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{bob_submitted_application_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status - Reject Jane's application (STAFF)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application status updated to REJECTED\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('REJECTED');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REJECTED\",\n  \"staffNotes\": \"Living situation not suitable for this pet's needs.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{jane_submitted_application_id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{jane_submitted_application_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test User Cannot Update Submitted Application (Bob - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error indicates invalid status\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.include('INVALID');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alternatePhone\": \"1111111111\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{bob_submitted_application_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{bob_submitted_application_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test Bob Cannot Access Staff Endpoints (Bob - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status - Jane's application to DRAFT (STAFF)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application status updated to DRAFT\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('DRAFT');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staffToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"DRAFT\",\n  \"staffNotes\": \"Putting back to DRAFT, further documents needed.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{jane_submitted_application_id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{jane_submitted_application_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Application (Jane - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken2}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{jane_submitted_application_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{jane_submitted_application_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Applications (Jane - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has pagination structure\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('content');",
+                  "    pm.expect(jsonData).to.have.property('page');",
+                  "    pm.expect(jsonData.page).to.have.property('size');",
+                  "    pm.expect(jsonData.page).to.have.property('totalElements');",
+                  "});",
+                  "",
+                  "pm.test(\"Content is emtpy\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.content).to.be.empty;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken2}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/my-applications?page=0&size=10&sortBy=createdAt&sortDirection=DESC",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "my-applications"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "DESC"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Withdraw Application (Bob - USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Application status is WITHDRAWN\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('WITHDRAWN');",
+                  "    pm.collectionVariables.set(\"bob_submitted_application_id\", jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Submitted timestamp is set\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.updatedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{bob_submitted_application_id}}/withdraw",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "{{bob_submitted_application_id}}",
+                "withdraw"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }
@@ -2037,6 +2458,18 @@
     },
     {
       "key": "photo_to_be_deleted",
+      "value": ""
+    },
+    {
+      "key": "staff_created_pet_id",
+      "value": ""
+    },
+    {
+      "key": "bob_application_pet_id",
+      "value": ""
+    },
+    {
+      "key": "jane_application_pet_id",
       "value": ""
     }
   ]

@@ -3,6 +3,7 @@ package com.devtiro.pets.services;
 import com.devtiro.pets.domain.dto.AdoptionApplicationCreateRequest;
 import com.devtiro.pets.domain.dto.AdoptionApplicationDto;
 import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateRequest;
+import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateStatusRequest;
 import com.devtiro.pets.domain.entity.AdoptionApplication;
 import com.devtiro.pets.domain.entity.AdoptionApplicationStatus;
 import com.devtiro.pets.domain.entity.User;
@@ -30,5 +31,17 @@ public interface AdoptionApplicationService {
     Page<AdoptionApplicationDto> getAllApplications(Pageable pageable);
 
     Page<AdoptionApplicationDto> getApplicationsByStatus(AdoptionApplicationStatus status, Pageable pageable);
+
+    AdoptionApplicationDto updateApplicationStatus(String applicationId, AdoptionApplicationUpdateStatusRequest request, User staff);
+
+    /**
+     * Withdraw an application (USER only, must be submitter)
+     */
+    AdoptionApplicationDto withdrawApplication(String applicationId, User applicant);
+
+    /**
+     * Delete a draft application (USER only, must be submitter)
+     */
+    void deleteApplication(String applicationId, User applicant);
 
 }

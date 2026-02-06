@@ -3,17 +3,18 @@ package com.devtiro.pets.services.impl;
 import com.devtiro.pets.domain.dto.AdoptionApplicationCreateRequest;
 import com.devtiro.pets.domain.dto.AdoptionApplicationDto;
 import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateRequest;
+import com.devtiro.pets.domain.dto.AdoptionApplicationUpdateStatusRequest;
 import com.devtiro.pets.domain.entity.*;
 import com.devtiro.pets.exceptions.*;
 import com.devtiro.pets.mappers.AdoptionApplicationMapper;
 import com.devtiro.pets.repositories.ApplicationRepository;
 import com.devtiro.pets.repositories.PetRepository;
-import com.devtiro.pets.repositories.UserRepository;
 import com.devtiro.pets.services.AdoptionApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,6 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
     private final PetRepository petRepository;
     private final AdoptionApplicationMapper adoptionApplicationMapper;
     private final ApplicationRepository applicationRepository;
-    private final UserRepository userRepository;
 
     @Override
     public AdoptionApplicationDto createApplication(AdoptionApplicationCreateRequest request, User applicant) {
@@ -73,11 +73,7 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         AdoptionApplication application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new ApplicationNotFoundException("Application not found: " + applicationId));
 
-        // Verify ownership
-        User verifiedUser = userRepository.findByUsername(applicant.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("User not found: " + applicant.getUsername()));
-
-        if (!application.getApplicantId().equals(verifiedUser.getId())) {
+        if (!application.getApplicantId().equals(applicant.getId())) {
             throw new UnauthorizedException("You can only update your own applications");
         }
 
@@ -86,11 +82,9 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
             throw new InvalidApplicationStatusException("Only draft applications can be updated");
         }
 
-        if (!application.getAdditionalComments().isEmpty()) {
-            String additionalCommentsAppended = application.getAdditionalComments()
-                    .concat("\n")
-                    .concat(request.getAdditionalComments());
-            request.setAdditionalComments(additionalCommentsAppended);
+        String currentAdditionalComments = getAdditionalComments(application, request.getAdditionalComments());
+        if (currentAdditionalComments != null) {
+            application.setAdditionalComments(currentAdditionalComments);
         }
 
         adoptionApplicationMapper.updateEntity(application, request);
@@ -177,6 +171,76 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
         return applications.map(adoptionApplicationMapper::toAdoptionApplicationDto);
     }
 
+    @Override
+    public AdoptionApplicationDto updateApplicationStatus(String applicationId, AdoptionApplicationUpdateStatusRequest request, User staff) {
+        log.info("Updating status of application {} to {} by staff {}", applicationId, request.getStatus(), staff.getUsername());
+
+        AdoptionApplication application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException("Application not found: " + applicationId));
+
+        application.setStatus(request.getStatus());
+
+        String currentStaffNotes = getStaffNotes(application, request.getStaffNotes());
+        if (currentStaffNotes != null) {
+            application.setStaffNotes(currentStaffNotes);
+        }
+
+        AdoptionApplication updated = applicationRepository.save(application);
+        log.info("Updated application {} status to {}", updated.getId(), updated.getStatus());
+
+        return adoptionApplicationMapper.toAdoptionApplicationDto(updated);
+    }
+
+    @Override
+    public AdoptionApplicationDto withdrawApplication(String applicationId, User applicant) {
+        log.info("Withdrawing application {} by user {}", applicationId, applicant.getUsername());
+
+        AdoptionApplication application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found: " + applicationId));
+
+        // Verify ownership
+        if (!application.getApplicantId().equals(applicant.getId())) {
+            throw new UnauthorizedException("You can only withdraw your own applications");
+        }
+
+        // Can only withdraw submitted applications
+        if (application.getStatus().equals(AdoptionApplicationStatus.DRAFT)) {
+            throw new InvalidApplicationStatusException("Draft applications should be deleted, not withdrawn");
+        }
+
+        if (application.getStatus().equals(AdoptionApplicationStatus.WITHDRAWN)) {
+            throw new InvalidApplicationStatusException("Application has already been withdrawn");
+        }
+
+        // Update status
+        application.setStatus(AdoptionApplicationStatus.WITHDRAWN);
+
+        AdoptionApplication withdrawn = applicationRepository.save(application);
+        log.info("Withdrew application {}", withdrawn.getId());
+
+        return adoptionApplicationMapper.toAdoptionApplicationDto(withdrawn);
+    }
+
+    @Override
+    public void deleteApplication(String applicationId, User applicant) {
+        log.info("Deleting application {} by user {}", applicationId, applicant.getUsername());
+
+        AdoptionApplication application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found: " + applicationId));
+
+        // Verify ownership
+        if (!application.getApplicantId().equals(applicant.getId())) {
+            throw new UnauthorizedException("You can only withdraw your own applications");
+        }
+        // Can only delete draft applications
+        if (!application.getStatus().equals(AdoptionApplicationStatus.DRAFT)) {
+            throw new InvalidApplicationStatusException("Only draft applications can be deleted");
+        }
+
+        applicationRepository.delete(application);
+        log.info("Deleted application {}", applicationId);
+    }
+
     // TODO create validatorservice for this and pet
     private void checkDuplicateApplication(String petId, String applicantId) {
         // Check if user already has a submitted (non-draft) application for this pet
@@ -189,6 +253,37 @@ public class AdoptionApplicationServiceImpl implements AdoptionApplicationServic
                 && !optionalAdoptionApplication.get().getStatus().equals(AdoptionApplicationStatus.DRAFT)) {
             throw new DuplicateApplicationException("You have already submitted an application for this pet");
         }
+    }
+
+    /**
+     * Get the staff notes that the application to be updated with
+     */
+    private String getStaffNotes(AdoptionApplication application, String staffNotes) {
+        // request staff notes is empty, if the application staff notes is null then return null, otherwise
+        // just return the original staff notes
+        if (staffNotes == null) {
+            return application.getStaffNotes() == null ? null : application.getStaffNotes();
+        }
+        // application staff notes is empty, but request staff notes is not empty just return that
+        if (application.getStaffNotes() == null) {
+            return staffNotes;
+        }
+        // both are non-empty, concatenate them
+        return application.getStaffNotes() + "\n" + staffNotes;
+    }
+
+
+    /**
+     * Get the additional comments that the application to be updated with
+     */
+    private String getAdditionalComments(AdoptionApplication application, String additionalComments) {
+        if (additionalComments == null) {
+            return application.getAdditionalComments() == null ? null : application.getAdditionalComments();
+        }
+        if (application.getAdditionalComments() == null) {
+            return additionalComments;
+        }
+        return application.getAdditionalComments() + "\n" + additionalComments;
     }
 
 }
