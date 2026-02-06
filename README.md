@@ -284,8 +284,7 @@ BOB_EMAIL=<your-second-email-address-for-first-adopter>
 # (For USER/adopter, set with app.jane.email parameter in the application.yml)
 JANE_EMAIL=<your-third-email-address-for-second-adopter>
 ```
-
-The application is configured via `src/main/resources/application.yaml`. Key configurations include:
+This data will be loaded into `application.yaml` file and the application is configured via `src/main/resources/application.yaml`. Configuration:
 
 ```yaml
 spring:
