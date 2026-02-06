@@ -233,6 +233,8 @@ After loading sample data, you can log in with:
 - Email: `user@example.com`
 - Password: `password123`
 
+For running the postman test collection additional configurations are needed, see below
+
 ### Features of Sample Data
 
 - **Diverse Pet Profiles**: Various breeds, ages (0.3 to 9 years), and sizes
@@ -256,7 +258,9 @@ For detailed information about the data seeding utility, see the [DataConfig Sum
 ### Application Properties
 
 The variables and sensitive data (email addresses) are loaded from the `application-local.properties` file.
-Create this file in the project root folder:
+This file is ignored from github repo, so you need to create it manually.
+
+Create this file (`application-local.properties`) in the project root folder, and place your own email address:
 
 ```properties
 ELASTICSEARCH_URL=http://localhost:9200
@@ -275,8 +279,9 @@ JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
 # Application Configuration
 SERVER_PORT=8080
 
-# (For USER, set with app.user.email parameter in the application.yml)
+# (For USER/adopter, set with app.bob.email parameter in the application.yml)
 BOB_EMAIL=<your-second-email-address-for-first-adopter>
+# (For USER/adopter, set with app.jane.email parameter in the application.yml)
 JANE_EMAIL=<your-third-email-address-for-second-adopter>
 ```
 
