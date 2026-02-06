@@ -278,11 +278,6 @@ JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
 
 # Application Configuration
 SERVER_PORT=8080
-
-# (For USER/adopter, set with app.bob.email parameter in the application.yml)
-BOB_EMAIL=<your-second-email-address-for-first-adopter>
-# (For USER/adopter, set with app.jane.email parameter in the application.yml)
-JANE_EMAIL=<your-third-email-address-for-second-adopter>
 ```
 This data will be loaded into `application.yaml` file and the application is configured via `src/main/resources/application.yaml`. Configuration:
 
@@ -315,14 +310,6 @@ jwt:
   secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}  # Must be set via environment variable
   access-token-expiration: ${JWT_ACCESS_EXPIRATION:3600000}  # 1 hour
   refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7 days
-
-app:
-  staff:
-    email: ${MAIL_USERNAME:staff@pets.com}
-  bob:
-    email: ${BOB_EMAIL:bob@email.com}
-  jane:
-    email: ${JANE_EMAIL:jane@email.com}
 ```
 
 ### Production Configuration
@@ -350,12 +337,14 @@ The project includes a Postman collection for API testing: `Pet Adoption Platfor
 3. Select the `Pet Adoption Platform API Final.postman_collection.json` file
 4. The collection will be imported with all available endpoints
 5. Create an environment (e.g. `Pet Adoption Platform`)
-6. Create the following environment variables:
-    - `staff_email` (put your smtp host email here)
-    - `bob_email` (additional email address)
-    - `jane_email` (additional email address)
 
-All your variables will be created and used from this environment
+   (All your variables will be created and used from this environment)
+6. Create the following environment variables:
+    - `staff_email` (put your smtp host email here - `MAIL_USERNAME=<your-smtp-email-address>` that is configured in the `application-local.properties` file)
+    - `bob_email` (additional existing email address)
+    - `jane_email` (additional existing email address)
+    
+A test case in the postman test collection sends a notification from `staff_email` to `bob_email` when Bob (adopter with USER role) submits and application for a pet
 
 ### Main API Endpoints
 
