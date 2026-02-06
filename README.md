@@ -41,6 +41,9 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - 📝 **Adoption Applications**: Submit and track adoption applications
 - 💾 **Draft Applications**: Save application progress and complete later
 - 📊 **Application Tracking**: Monitor the status of your applications
+- 📝 **Adoption Applications**: Submit and track adoption applications
+- 💾 **Draft Applications**: Save application progress and complete later
+- 📊 **Application Tracking**: Monitor the status of your applications
 
 ### For Shelter Staff
 - 📋 **Pet Listing Management**: Create, update, and delete pet listings
@@ -48,11 +51,10 @@ The Pet Adoption Platform streamlines the adoption process through detailed pet 
 - 📁 **Medical Records**: Add and update comprehensive medical history
 - 🔄 **Status Updates**: Update pet availability status (Available, On Hold, Adopted)
 - 🔐 **Secure Authentication**: Role-based access control for shelter staff
+- 📝 **Adoption Applications**: Submit and track adoption applications
+- 📊 **Application Tracking**: Monitor the status of your applications
 
 ### 🔴 Planned Features (Not Yet Implemented)
-- 📝 **Adoption Applications**: Submit and track adoption applications
-- 💾 **Draft Applications**: Save application progress and complete later
-- 📊 **Application Tracking**: Monitor the status of your applications
 - 💗 **Favorites/Wishlist**: Save favorite pets for later viewing
 - 📅 **Meet-and-Greet Scheduling**: Schedule visits with pets
 
