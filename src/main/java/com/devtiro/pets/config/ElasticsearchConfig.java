@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableElasticsearchRepositories(basePackages = "com.devtiro.realestate.repositories")
+@EnableElasticsearchRepositories(basePackages = "com.devtiro.pets.repositories")
 public class ElasticsearchConfig {
 
     @Value("${spring.elasticsearch.uris:http://localhost:9200}")
