@@ -705,5 +705,11 @@ Contributions are welcome! Please follow these steps:
 
 ## 📄 Acknowledgments
 
-- <h3>Devtiro for project brief, and youtube videos (www.youtube.com/@devtiro)</h3>
+<h3>Devtiro for project brief, Youtube videos (www.youtube.com/@devtiro) and training material </h3>
+
+
+
+
+
+
 
