@@ -267,7 +267,6 @@ ELASTICSEARCH_URL=http://localhost:9200
 ELASTICSEARCH_USERNAME=
 ELASTICSEARCH_PASSWORD=
 
-# Email Configuration (For STAFF, set with app.staff.email parameter in the application.yml)
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=<your-smtp-email-address>
@@ -344,7 +343,7 @@ The project includes a Postman collection for API testing: `Pet Adoption Platfor
     - `bob_email` (additional existing email address)
     - `jane_email` (additional existing email address)
     
-A test case in the postman test collection sends a notification from `staff_email` to `bob_email` when Bob (adopter with USER role) submits and application for a pet
+A test case in the postman test collection sends a notification from `staff_email` to `bob_email` when Bob (adopter with USER role) submits an application for a pet
 
 ### Main API Endpoints
 
